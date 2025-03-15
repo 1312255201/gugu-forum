@@ -4,6 +4,8 @@ import cn.gugufish.entity.RestBean;
 import cn.gugufish.entity.dto.Account;
 import cn.gugufish.entity.dto.AccountDetails;
 import cn.gugufish.entity.vo.request.DetailsSaveVO;
+import cn.gugufish.entity.vo.request.EmailRegisterVO;
+import cn.gugufish.entity.vo.request.ModifyEmailVO;
 import cn.gugufish.entity.vo.response.AccountDetailsVO;
 import cn.gugufish.entity.vo.response.AccountVO;
 import cn.gugufish.service.AccountDetailsService;
@@ -39,5 +41,11 @@ public class AccountController {
                                       @RequestBody @Valid DetailsSaveVO vo){
         boolean success = accountDetailsService.saveAccountDetails(id,vo);
         return success ?RestBean.success():RestBean.failure(400,"用户名以及被占用了QAQ");
+    }
+    @PostMapping("/modify-email")
+    public RestBean<Void> modifyEmail(@RequestAttribute(Const.ATTR_USER_ID) int id,
+                                      @RequestBody @Valid ModifyEmailVO vo){
+        String result = accountService.modifyEmial(id,vo);
+        return result == null?RestBean.success():RestBean.failure(400,result);
     }
 }

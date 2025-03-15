@@ -4,6 +4,7 @@ import cn.gugufish.entity.dto.Account;
 import cn.gugufish.entity.vo.request.ConfirmResetVO;
 import cn.gugufish.entity.vo.request.EmailRegisterVO;
 import cn.gugufish.entity.vo.request.EmailResetVO;
+import cn.gugufish.entity.vo.request.ModifyEmailVO;
 import cn.gugufish.mapper.AccountMapper;
 import cn.gugufish.service.AccountService;
 import cn.gugufish.utils.Const;
@@ -140,6 +141,27 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         String code = this.getEmailVerifyCode(email);
         if(code == null) return "请先获取验证码";
         if(!code.equals(info.getCode())) return "验证码错误，请重新输入";
+        return null;
+    }
+    /**
+     * 修改邮箱操作，验证验证码是否正确
+     * @param info 验证基本信息
+     * @return 操作结果，null表示正常，否则为错误原因
+     */
+    @Override
+    public String modifyEmial(int id, ModifyEmailVO info) {
+        String email = info.getEmail();
+        String code = this.getEmailVerifyCode(email);
+        if(code == null)return "请先获取验证码！";
+        if(!code.equals(info.getCode()))return "验证码有误，请重新输入";
+        this.deleteEmailVerifyCode(email);
+        Account account = this.findAccountByNameOrEmail(email);
+        if(account !=  null && account.getId() != id){
+            return "该电子邮件已经被其他账号绑定，无法完成此操作";
+        }
+        this.update().set("email", email)
+                .eq("id",id)
+                .update();
         return null;
     }
 

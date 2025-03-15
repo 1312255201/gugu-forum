@@ -79,6 +79,7 @@ get('/api/user/details',data=>{
   baseForm.wechat = data.wechat
   baseForm.qq = data.qq
   baseForm.desc = data.desc
+  emailForm.email = store.user.email
   desc.value = data.desc
   loading.form = false
 })
@@ -117,7 +118,7 @@ get('/api/user/details',data=>{
         </el-form>
       </card>
       <card style="margin-top: 10px" :icon="Message" title="电子邮件设置" desc="你可以在这里修改你的电子邮件地址">
-        <el-form :model="emailForm" ref="emailFormRef" label-position="top" style="margin: 0 10px 10px 10px">
+        <el-form :model="emailForm" ref="emailFormRef" :rules="rules" label-position="top" style="margin: 0 10px 10px 10px">
           <el-form-item label="电子邮件" prop="email">
             <el-input v-model="emailForm.email"/>
           </el-form-item>
