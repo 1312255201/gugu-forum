@@ -3,20 +3,26 @@ import { logout } from '@/net'
 import router from "@/router";
 import {get} from "@/net/index.js"
 import {useStore} from "@/store/index.js";
-import {ref} from "vue"
+import {reactive, ref} from "vue"
 import {
+  Back,
   Bell,
   ChatDotSquare, Collection, DataLine,
   Document, Files,
-  Location, Lock, Monitor,
+  Location, Lock, Message, Monitor,
   Notification, Operation,
   Position,
-  School,
+  School, Search,
   Umbrella, User
 } from "@element-plus/icons-vue";
 
 const store = useStore()
 const loading = ref(true)
+
+const searchInput = reactive({
+  type: '1',
+  text: '',
+})
 
 get('api/user/info',(data)=>{
   store.user = data
@@ -32,12 +38,44 @@ function userLogout() {
     <el-container style="height: 100%" v-if="!loading">
       <el-header class="main-content-header">
         <el-image class="logo" src="/logo.jpg"></el-image>
-        <div style="flex: 1" class="user-info">
+        <div style="flex: 1; padding: 0 20px; text-align: center" >
+          <el-input v-model="searchInput.text" style="width: 100%;max-width: 500px" placeholder="搜索网站里面的内容...">
+            <template #prefix>
+              <el-icon><Search/></el-icon>
+            </template>
+            <template #append>
+              <el-select style="width: 120px" v-model="searchInput.type">
+                <el-option value="1" label="帖子广场"/>
+                <el-option value="2" label="失物招领"/>
+                <el-option value="3" label="校园活动"/>
+                <el-option value="4" label="表白墙"/>
+                <el-option value="5" label="教务通知"/>
+              </el-select>
+            </template>
+          </el-input>
+        </div>
+        <div  class="user-info">
           <div class="profile">
             <div>{{store.user.username}}</div>
             <div>{{store.user.email}}</div>
           </div>
-          <el-avatar src="/avatar.jpg"></el-avatar>
+          <el-dropdown>
+            <el-avatar src="/avatar.jpg"></el-avatar>
+            <template #dropdown>
+              <el-dropdown-item>
+                <el-icon><Operation/></el-icon>
+                个人设置
+              </el-dropdown-item>
+              <el-dropdown-item>
+                <el-icon><Message/></el-icon>
+                消息列表
+              </el-dropdown-item>
+              <el-dropdown-item divided @click="userLogout">
+                <el-icon><Back/></el-icon>
+                退出登录
+              </el-dropdown-item>
+            </template>
+          </el-dropdown>
         </div>
       </el-header>
       <el-container>
@@ -167,6 +205,10 @@ function userLogout() {
     display: flex;
     justify-content: flex-end;
     align-items: center;
+
+    .el-avatar:hover{
+      cursor: pointer;
+    }
 
     .profile{
       text-align: right;
