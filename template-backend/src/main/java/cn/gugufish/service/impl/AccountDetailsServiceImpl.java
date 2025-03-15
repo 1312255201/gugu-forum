@@ -9,6 +9,7 @@ import cn.gugufish.service.AccountService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AccountDetailsServiceImpl extends ServiceImpl<AccountDetailsMapper, AccountDetails> implements AccountDetailsService {
@@ -21,7 +22,8 @@ public class AccountDetailsServiceImpl extends ServiceImpl<AccountDetailsMapper,
     }
 
     @Override
-    public  synchronized boolean saveAccountDetails(int id, DetailsSaveVO vo) {
+    @Transactional
+    public synchronized boolean saveAccountDetails(int id, DetailsSaveVO vo) {
         Account account =service.findAccountByNameOrEmail(vo.getUsername());
         if (account==null || account.getId() == id){
             if(service.update()
