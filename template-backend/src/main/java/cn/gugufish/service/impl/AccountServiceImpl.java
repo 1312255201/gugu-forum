@@ -1,10 +1,7 @@
 package cn.gugufish.service.impl;
 
 import cn.gugufish.entity.dto.Account;
-import cn.gugufish.entity.vo.request.ConfirmResetVO;
-import cn.gugufish.entity.vo.request.EmailRegisterVO;
-import cn.gugufish.entity.vo.request.EmailResetVO;
-import cn.gugufish.entity.vo.request.ModifyEmailVO;
+import cn.gugufish.entity.vo.request.*;
 import cn.gugufish.mapper.AccountMapper;
 import cn.gugufish.service.AccountService;
 import cn.gugufish.utils.Const;
@@ -149,7 +146,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
      * @return 操作结果，null表示正常，否则为错误原因
      */
     @Override
-    public String modifyEmial(int id, ModifyEmailVO info) {
+    public String modifyEmail(int id, ModifyEmailVO info) {
         String email = info.getEmail();
         String code = this.getEmailVerifyCode(email);
         if(code == null)return "请先获取验证码！";
@@ -164,6 +161,25 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
                 .update();
         return null;
     }
+    /**
+     * 修改用户密码
+     * @param id 用户的ID
+     * @param info 重置密码请求VO
+     * @return 操作结果，null表示正常，否则为错误原因
+     */
+    @Override
+    public String changePassword(int id, ChangePasswordVO info) {
+        String password = this.query().eq("id",id).one().getPassword();
+        if(!passwordEncoder.matches(info.getPassword(),password)){
+            return "原密码错误，请重新输入！";
+        }
+        boolean success = this.update()
+                .eq("id",id)
+                .set("password",passwordEncoder.encode(info.getNew_password()))
+                .update();
+        return success ?null:"未知错误，请联系网站管理员";
+    }
+
 
     /**
      * 移除Redis中存储的邮件验证码

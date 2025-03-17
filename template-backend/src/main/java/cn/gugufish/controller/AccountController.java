@@ -3,6 +3,7 @@ package cn.gugufish.controller;
 import cn.gugufish.entity.RestBean;
 import cn.gugufish.entity.dto.Account;
 import cn.gugufish.entity.dto.AccountDetails;
+import cn.gugufish.entity.vo.request.ChangePasswordVO;
 import cn.gugufish.entity.vo.request.DetailsSaveVO;
 import cn.gugufish.entity.vo.request.EmailRegisterVO;
 import cn.gugufish.entity.vo.request.ModifyEmailVO;
@@ -16,6 +17,7 @@ import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
+import java.util.function.Supplier;
 
 @RestController
 @RequestMapping("/api/user")
@@ -45,7 +47,25 @@ public class AccountController {
     @PostMapping("/modify-email")
     public RestBean<Void> modifyEmail(@RequestAttribute(Const.ATTR_USER_ID) int id,
                                       @RequestBody @Valid ModifyEmailVO vo){
-        String result = accountService.modifyEmial(id,vo);
-        return result == null?RestBean.success():RestBean.failure(400,result);
+        return this.messageHandle(() -> accountService.modifyEmail(id,vo));
+
+    }
+    @PostMapping("/change-password")
+    public RestBean<Void> changePassword(@RequestAttribute(Const.ATTR_USER_ID) int id,
+                                         @RequestBody @Valid ChangePasswordVO vo){
+        return this.messageHandle(() -> accountService.changePassword(id,vo));
+    }
+    /**
+     * 针对于返回值为String作为错误信息的方法进行统一处理
+     * @param action 具体操作
+     * @return 响应结果
+     * @param <T> 响应结果类型
+     */
+    private <T> RestBean<T> messageHandle(Supplier<String> action){
+        String message = action.get();
+        if(message == null)
+            return RestBean.success();
+        else
+            return RestBean.failure(400, message);
     }
 }

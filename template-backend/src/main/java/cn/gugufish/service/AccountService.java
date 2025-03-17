@@ -1,10 +1,7 @@
 package cn.gugufish.service;
 
 import cn.gugufish.entity.dto.Account;
-import cn.gugufish.entity.vo.request.ConfirmResetVO;
-import cn.gugufish.entity.vo.request.EmailRegisterVO;
-import cn.gugufish.entity.vo.request.EmailResetVO;
-import cn.gugufish.entity.vo.request.ModifyEmailVO;
+import cn.gugufish.entity.vo.request.*;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
@@ -15,5 +12,6 @@ public interface AccountService extends IService<Account>, UserDetailsService {
     String registerEmailAccount(EmailRegisterVO info);
     String resetEmailAccountPassword(EmailResetVO info);
     String resetConfirm(ConfirmResetVO info);
-    String modifyEmial(int id, ModifyEmailVO info);
+    String modifyEmail(int id, ModifyEmailVO info);
+    String changePassword(int id, ChangePasswordVO info);
 }
