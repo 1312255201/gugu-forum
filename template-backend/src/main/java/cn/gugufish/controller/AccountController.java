@@ -3,13 +3,13 @@ package cn.gugufish.controller;
 import cn.gugufish.entity.RestBean;
 import cn.gugufish.entity.dto.Account;
 import cn.gugufish.entity.dto.AccountDetails;
-import cn.gugufish.entity.vo.request.ChangePasswordVO;
-import cn.gugufish.entity.vo.request.DetailsSaveVO;
-import cn.gugufish.entity.vo.request.EmailRegisterVO;
-import cn.gugufish.entity.vo.request.ModifyEmailVO;
+import cn.gugufish.entity.dto.AccountPrivacy;
+import cn.gugufish.entity.vo.request.*;
 import cn.gugufish.entity.vo.response.AccountDetailsVO;
+import cn.gugufish.entity.vo.response.AccountPrivacyVO;
 import cn.gugufish.entity.vo.response.AccountVO;
 import cn.gugufish.service.AccountDetailsService;
+import cn.gugufish.service.AccountPrivacyService;
 import cn.gugufish.service.AccountService;
 import cn.gugufish.utils.Const;
 import jakarta.annotation.Resource;
@@ -26,6 +26,8 @@ public class AccountController {
     AccountService accountService;
     @Resource
     AccountDetailsService accountDetailsService;
+    @Resource
+    AccountPrivacyService  accountPrivacyService;
     @GetMapping("/info")
     public RestBean<AccountVO> info(@RequestAttribute(Const.ATTR_USER_ID) int id){
         Account account = accountService.findAccountById(id);
@@ -54,6 +56,16 @@ public class AccountController {
     public RestBean<Void> changePassword(@RequestAttribute(Const.ATTR_USER_ID) int id,
                                          @RequestBody @Valid ChangePasswordVO vo){
         return this.messageHandle(() -> accountService.changePassword(id,vo));
+    }
+    @PostMapping("/save-privacy")
+    public RestBean<Void> savePrivacy(@RequestAttribute(Const.ATTR_USER_ID) int id,
+                                      @RequestBody @Valid PrivacySaveVO vo){
+        accountPrivacyService.savePrivacy(id,vo);
+        return RestBean.success();
+    }
+    @GetMapping("/privacy")
+    public RestBean<AccountPrivacyVO> privacy(@RequestAttribute(Const.ATTR_USER_ID) int id){
+        return RestBean.success(accountPrivacyService.accountPrivacy(id).asViewObject(AccountPrivacyVO.class));
     }
     /**
      * 针对于返回值为String作为错误信息的方法进行统一处理
