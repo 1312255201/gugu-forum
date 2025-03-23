@@ -4,13 +4,17 @@ import cn.gugufish.entity.dto.Account;
 import cn.gugufish.mapper.AccountMapper;
 import cn.gugufish.service.ImageService;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import io.minio.GetObjectArgs;
+import io.minio.GetObjectResponse;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.UUID;
 @Slf4j
 public class ImageServiceImpl implements ImageService {
@@ -40,5 +44,15 @@ public class ImageServiceImpl implements ImageService {
             log.error("图片上传发生问题"+e.getMessage(),e);
             return null;
         }
+    }
+
+    @Override
+    public void fetchImageFromMinio(OutputStream stream, String image) throws Exception {
+        GetObjectArgs args = GetObjectArgs.builder()
+                .bucket("forum")
+                .object(image)
+                .build();
+        GetObjectResponse response = minioClient.getObject(args);
+        IOUtils.copy(response, stream);
     }
 }
