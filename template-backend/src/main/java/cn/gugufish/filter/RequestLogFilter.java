@@ -29,7 +29,7 @@ public class RequestLogFilter extends OncePerRequestFilter {
     @Resource
     SnowflakeIdGenerator generator;
 
-    private final Set<String> ignores = Set.of("/swagger-ui", "/v3/api-docs");
+    private final Set<String> ignores = Set.of("/swagger-ui", "/v3/api-docs", "/images");
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -67,6 +67,7 @@ public class RequestLogFilter extends OncePerRequestFilter {
         int status = wrapper.getStatus();
         String content = status != 200 ?
                 status + " 错误" : new String(wrapper.getContentAsByteArray());
+
         log.info("请求处理耗时: {}ms | 响应结果: {}", time, content);
     }
 

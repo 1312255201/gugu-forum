@@ -11,12 +11,14 @@ import io.minio.PutObjectArgs;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.UUID;
 @Slf4j
+@Service
 public class ImageServiceImpl implements ImageService {
     @Resource
     MinioClient minioClient;

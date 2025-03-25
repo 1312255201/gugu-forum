@@ -60,7 +60,7 @@ function userLogout() {
             <div>{{store.user.email}}</div>
           </div>
           <el-dropdown>
-            <el-avatar src="/avatar.jpg"></el-avatar>
+            <el-avatar :src="store.avatarUrl"></el-avatar>
             <template #dropdown>
               <el-dropdown-item>
                 <el-icon><Operation/></el-icon>
