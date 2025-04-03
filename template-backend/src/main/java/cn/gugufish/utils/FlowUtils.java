@@ -16,6 +16,7 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class FlowUtils {
 
+    private static final LimitAction defualtAction = overclock -> !overclock;
     @Resource
     StringRedisTemplate template;
 
@@ -26,7 +27,7 @@ public class FlowUtils {
      * @return 是否通过限流检查
      */
     public boolean limitOnceCheck(String key, int blockTime){
-        return this.internalCheck(key, 1, blockTime, (overclock) -> false);
+        return this.internalCheck(key, 1, blockTime,defualtAction);
     }
 
     /**
@@ -61,6 +62,16 @@ public class FlowUtils {
                         template.opsForValue().set(blockKey, "", blockTime, TimeUnit.SECONDS);
                     return !overclock;
                 });
+    }
+    /**
+     * 针对于在时间段内多次请求限制，如3秒内限制请求20次
+     * @param counterKey 计数键
+     * @param frequency 请求频率
+     * @param period 计数周期
+     * @return 是否通过限流检查
+     */
+    public boolean limitPeriodCounterCheck(String counterKey, int frequency, int period){
+        return this.internalCheck(counterKey, frequency, period, defualtAction);
     }
 
     /**

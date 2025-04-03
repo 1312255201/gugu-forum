@@ -2,6 +2,7 @@ package cn.gugufish.service.impl;
 
 import cn.gugufish.entity.vo.response.WeatherVO;
 import cn.gugufish.service.WeatherService;
+import cn.gugufish.utils.Const;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import jakarta.annotation.Resource;
@@ -39,7 +40,7 @@ public class WeatherServiceImpl implements WeatherService {
         if(geo == null)return null;
         JSONObject location = geo.getJSONArray("location").getJSONObject(0);
         int id = location.getInteger("id");
-        String key = "weather:" + id;
+        String key = Const.FORUM_WEATHER_CACHE + id;
         String cache =template.opsForValue().get(key);
         if(cache != null)
             return JSONObject.parseObject(cache).to(WeatherVO.class);

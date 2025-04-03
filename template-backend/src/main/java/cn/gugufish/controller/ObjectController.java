@@ -17,8 +17,9 @@ import java.io.IOException;
 public class ObjectController {
     @Resource
     ImageService imageService;
-    @GetMapping("/images/avatar/**")
+    @GetMapping("/images/**")
     public void imageFetch(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        response.setHeader("Content-Type", "image/jpg");
         this.fetchImage(request,response);
     }
     private void fetchImage(HttpServletRequest request, HttpServletResponse response) throws Exception {
