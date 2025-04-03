@@ -3,7 +3,7 @@
 import LightCard from "@/components/LightCard.vue";
 import {Calendar, CollectionTag, EditPen} from "@element-plus/icons-vue";
 import Weather from "@/components/Weather.vue";
-import {computed, reactive} from "vue";
+import {computed, reactive, ref,onMounted} from "vue";
 import {get} from "@/net"
 import {ElMessage} from "element-plus";
 
@@ -18,6 +18,14 @@ const today = computed(()=>{
   const date = new Date()
   return `${date.getFullYear()} 年 ${date.getMonth() + 1} 月 ${date.getDate()} 日`
 })
+const ipAddr = ref("");
+
+onMounted(() => {
+  get("/api/util/ip", (data) => {
+    ipAddr.value = data;
+  });
+});
+
 
 navigator.geolocation.getCurrentPosition(position => {
   const longitude = position.coords.longitude
@@ -86,7 +94,7 @@ navigator.geolocation.getCurrentPosition(position => {
           </div>
           <div class="info-text">
             <div>当前IP地址:</div>
-            <div>127.0.0.1</div>
+            <div>{{ipAddr}}</div>
           </div>
         </light-card>
         <div style="font-size: 14px;margin-top: 10px;color: grey">
