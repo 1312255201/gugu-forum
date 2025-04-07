@@ -9,6 +9,9 @@ import axios from "axios";
 import {accessHeader, get, post} from "@/net";
 import {ElMessage} from "element-plus";
 import ColorDot from "@/components/ColorDot.vue";
+import {useStore} from "@/store";
+
+const store = useStore()
 
 defineProps({
   show: Boolean
@@ -23,7 +26,6 @@ const editor = reactive({
   title: '',
   text: '',
   loading: false,
-  types: []
 })
 
 function initEditor() {
@@ -43,8 +45,7 @@ function deltaToText(delta){
 
 const contentLength = computed(()=>deltaToText(editor.text).length)
 
-get('/api/forum/types',data => {editor.types=data
-})
+
 function submitTopic() {
   const text = deltaToText(editor.text)
   if(text.length > 10000) {
@@ -139,8 +140,8 @@ const editorOption = {
       </template>
       <div style="display: flex; gap: 10px">
         <div style="width: 150px">
-          <el-select placeholder="选择主题类型..." value-key="id" v-model="editor.type" :disabled="!editor.types.length">
-            <el-option v-for="item in editor.types" :value="item" :label="item.name">
+          <el-select placeholder="选择主题类型..." value-key="id" v-model="editor.type" :disabled="!store.forum.types.length">
+            <el-option v-for="item in store.forum.types" :value="item" :label="item.name">
               <div>
                 <color-dot :color="item.color"/>
                 <span style="margin-left: 10px">{{item.name}}</span>
@@ -154,7 +155,7 @@ const editorOption = {
         </div>
       </div>
       <div style="margin-top: 5px;font-size: 13px;color: grey">
-        <color-dot :color="editor.type?.color"/>
+        <color-dot :color="editor.type? editor.type.color : '#DEDEDE'"/>
         <span style="margin-left: 5px">{{editor.type ? editor.type.desc : '请在上方选择一个帖子类型'}}</span>
       </div>
       <div style="margin-top: 10px;height: 440px;overflow: hidden;border-radius: 5px"

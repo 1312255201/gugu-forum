@@ -9,6 +9,9 @@ export const useStore = defineStore('general',{
                 role:'',
                 avatar: '',
                 registerTime:null
+            },
+            forum: {
+                types: []
             }
         }
     },getters:{
@@ -17,6 +20,13 @@ export const useStore = defineStore('general',{
                 return `${axios.defaults.baseURL}/images${this.user.avatar}`
             else
                 return '/avatar.jpg'
+        }
+    }, actions: {
+        findTypeById(id) {
+            for (let type of this.forum.types) {
+                if(type.id === id)
+                    return type
+            }
         }
     }
 })

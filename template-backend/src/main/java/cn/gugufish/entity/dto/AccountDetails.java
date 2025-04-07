@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class AccountDetails implements BaseData {
     @TableId
     Integer id;
-    int gender;
+    Integer gender;
     String phone;
     String qq;
     String wechat;
