@@ -10,11 +10,14 @@ import cn.gugufish.utils.Const;
 import cn.gugufish.utils.ControllerUtils;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
+import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@Slf4j
 @RequestMapping("/api/forum")
 public class ForumController {
     @Resource

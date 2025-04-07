@@ -44,7 +44,7 @@ public class TopicServiceImpl extends ServiceImpl<TopicMapper, Topic> implements
         if(!textLimitCheck(vo.getContent()))
             return "字数超出限制，发送失败";
         if(!types.contains(vo.getType()))
-            return "文章类型非法，发送失败";//封号qwq你在干什么
+            return "文章类型非法，发送失败";// TODO: 封号qwq你在干什么
         String key = Const.FORUM_TOPIC_CREATE_COUNTER + uid;
         if(!flowUtils.limitPeriodCounterCheck(key,4,3600))
             return "发文过快，请稍后再试";
