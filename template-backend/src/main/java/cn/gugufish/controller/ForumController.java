@@ -1,14 +1,16 @@
 package cn.gugufish.controller;
 
 import cn.gugufish.entity.RestBean;
+import cn.gugufish.entity.vo.request.TopicCreateVO;
 import cn.gugufish.entity.vo.response.TopicTypeVO;
 import cn.gugufish.entity.vo.response.WeatherVO;
 import cn.gugufish.service.TopicService;
 import cn.gugufish.service.WeatherService;
+import cn.gugufish.utils.Const;
+import cn.gugufish.utils.ControllerUtils;
 import jakarta.annotation.Resource;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,6 +21,8 @@ public class ForumController {
     WeatherService weatherService;
     @Resource
     TopicService topicService;
+    @Resource
+    ControllerUtils controllerUtils;
     @GetMapping("/weather")
     public RestBean<WeatherVO> weather(double longitude,double latitude){
         WeatherVO vo = weatherService.fetchWeather( longitude, latitude);
@@ -32,5 +36,10 @@ public class ForumController {
                 .stream()
                 .map(type -> type.asViewObject(TopicTypeVO.class))
                 .toList());
+    }
+    @PostMapping("/create-topic")
+    public RestBean<Void> createTopic(@RequestAttribute(Const.ATTR_USER_ID) int id,
+                                      @Valid @RequestBody TopicCreateVO vo){
+        return controllerUtils.messageHandle(()-> topicService.createTopic(id, vo));
     }
 }

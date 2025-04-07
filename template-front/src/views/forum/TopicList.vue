@@ -129,7 +129,7 @@ navigator.geolocation.getCurrentPosition(position => {
         </div>
       </div>
     </div>
-    <topic-editor :show="editor" @close="editor = false"></topic-editor>
+    <topic-editor :show="editor" @success="editor = false" @close="editor = false"></topic-editor>
   </div>
 </template>
 

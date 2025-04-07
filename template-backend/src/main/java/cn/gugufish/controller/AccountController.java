@@ -12,6 +12,7 @@ import cn.gugufish.service.AccountDetailsService;
 import cn.gugufish.service.AccountPrivacyService;
 import cn.gugufish.service.AccountService;
 import cn.gugufish.utils.Const;
+import cn.gugufish.utils.ControllerUtils;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +29,8 @@ public class AccountController {
     AccountDetailsService accountDetailsService;
     @Resource
     AccountPrivacyService  accountPrivacyService;
+    @Resource
+    ControllerUtils utils;
     @GetMapping("/info")
     public RestBean<AccountVO> info(@RequestAttribute(Const.ATTR_USER_ID) int id){
         Account account = accountService.findAccountById(id);
@@ -49,13 +52,13 @@ public class AccountController {
     @PostMapping("/modify-email")
     public RestBean<Void> modifyEmail(@RequestAttribute(Const.ATTR_USER_ID) int id,
                                       @RequestBody @Valid ModifyEmailVO vo){
-        return this.messageHandle(() -> accountService.modifyEmail(id,vo));
+        return utils.messageHandle(() -> accountService.modifyEmail(id,vo));
 
     }
     @PostMapping("/change-password")
     public RestBean<Void> changePassword(@RequestAttribute(Const.ATTR_USER_ID) int id,
                                          @RequestBody @Valid ChangePasswordVO vo){
-        return this.messageHandle(() -> accountService.changePassword(id,vo));
+        return utils.messageHandle(() -> accountService.changePassword(id,vo));
     }
     @PostMapping("/save-privacy")
     public RestBean<Void> savePrivacy(@RequestAttribute(Const.ATTR_USER_ID) int id,
@@ -67,17 +70,5 @@ public class AccountController {
     public RestBean<AccountPrivacyVO> privacy(@RequestAttribute(Const.ATTR_USER_ID) int id){
         return RestBean.success(accountPrivacyService.accountPrivacy(id).asViewObject(AccountPrivacyVO.class));
     }
-    /**
-     * 针对于返回值为String作为错误信息的方法进行统一处理
-     * @param action 具体操作
-     * @return 响应结果
-     * @param <T> 响应结果类型
-     */
-    private <T> RestBean<T> messageHandle(Supplier<String> action){
-        String message = action.get();
-        if(message == null)
-            return RestBean.success();
-        else
-            return RestBean.failure(400, message);
-    }
+
 }
