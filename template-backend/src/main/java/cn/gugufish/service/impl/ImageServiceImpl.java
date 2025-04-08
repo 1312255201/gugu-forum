@@ -45,6 +45,8 @@ public class ImageServiceImpl extends ServiceImpl<ImageStoreMapper, StoreImage> 
             minioClient.putObject(args);
             if(accountMapper.update(null, Wrappers.<Account>update()
                     .eq("id",id).set("avatar",imageName))>0){
+                String avatar = accountMapper.selectById(id).getAvatar();
+                this.deleteOldAvatar(avatar);
                 return imageName;
             }
             else{
@@ -70,8 +72,7 @@ public class ImageServiceImpl extends ServiceImpl<ImageStoreMapper, StoreImage> 
                 .build();
         try {
             minioClient.putObject(args);
-            String avatar = accountMapper.selectById(id).getAvatar();
-            this.deleteOldAvatar(avatar);
+
             if(this.save(new StoreImage(id, imageName, date))) {
                 return imageName;
             } else {
@@ -98,6 +99,7 @@ public class ImageServiceImpl extends ServiceImpl<ImageStoreMapper, StoreImage> 
                 .bucket("forum")
                 .object(avatar)
                 .build();
+        log.info("对象存储清理老的头像");
         minioClient.removeObject(remove);
     }
 }

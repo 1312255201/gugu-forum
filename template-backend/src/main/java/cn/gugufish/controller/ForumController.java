@@ -3,6 +3,7 @@ package cn.gugufish.controller;
 import cn.gugufish.entity.RestBean;
 import cn.gugufish.entity.vo.request.TopicCreateVO;
 import cn.gugufish.entity.vo.response.TopicPreviewVO;
+import cn.gugufish.entity.vo.response.TopicTopVO;
 import cn.gugufish.entity.vo.response.TopicTypeVO;
 import cn.gugufish.entity.vo.response.WeatherVO;
 import cn.gugufish.service.TopicService;
@@ -50,6 +51,11 @@ public class ForumController {
     @GetMapping("/list-topic")
     public RestBean<List<TopicPreviewVO>> listTopic(@RequestParam @Min(0) int page,
                                                     @RequestParam @Min(0) int type){
+        log.info(topicService.listTopicByPage(page, type).toString());
         return RestBean.success(topicService.listTopicByPage(page, type));
+    }
+    @GetMapping("/top-topic")
+    public RestBean<List<TopicTopVO>> topTopic(){
+        return RestBean.success(topicService.listTopTopics());
     }
 }

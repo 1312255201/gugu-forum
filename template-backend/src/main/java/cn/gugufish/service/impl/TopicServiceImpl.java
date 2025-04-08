@@ -4,6 +4,7 @@ import cn.gugufish.entity.dto.Topic;
 import cn.gugufish.entity.dto.TopicType;
 import cn.gugufish.entity.vo.request.TopicCreateVO;
 import cn.gugufish.entity.vo.response.TopicPreviewVO;
+import cn.gugufish.entity.vo.response.TopicTopVO;
 import cn.gugufish.mapper.TopicMapper;
 import cn.gugufish.mapper.TopicTypeMapper;
 import cn.gugufish.service.TopicService;
@@ -12,6 +13,7 @@ import cn.gugufish.utils.Const;
 import cn.gugufish.utils.FlowUtils;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
@@ -57,6 +59,8 @@ public class TopicServiceImpl extends ServiceImpl<TopicMapper, Topic> implements
         topic.setUid(uid);
         topic.setTime(new Date());
         if(this.save(topic)){
+            cacheUtils.deleteCachePattern(Const.FORUM_TOPIC_PREVIEW_CACHE + "*");
+            //清空缓存
             return null;
         }
         else{
@@ -68,7 +72,8 @@ public class TopicServiceImpl extends ServiceImpl<TopicMapper, Topic> implements
     public List<TopicPreviewVO> listTopicByPage(int page, int type) {
         String key = Const.FORUM_TOPIC_PREVIEW_CACHE + page + ":" + type;
         List<TopicPreviewVO> list = cacheUtils.takeListFromCache(key, TopicPreviewVO.class);
-        if(list != null) return list;
+        if(list != null)
+            return list;
         List<Topic> topics;
         if(type == 0)
             topics = baseMapper.topicList(page * 10);
@@ -78,6 +83,17 @@ public class TopicServiceImpl extends ServiceImpl<TopicMapper, Topic> implements
         list = topics.stream().map(this::resolveToPreview).toList();
         cacheUtils.saveListToCache(key, list, 60);
         return list;
+    }
+    @Override
+    public List<TopicTopVO> listTopTopics() {
+        List<Topic> topics = baseMapper.selectList(Wrappers.<Topic>query()
+                .select("id", "title", "time")
+                .eq("top", 1));
+        return topics.stream().map(topic -> {
+            TopicTopVO vo = new TopicTopVO();
+            BeanUtils.copyProperties(topic, vo);
+            return vo;
+        }).toList();
     }
     private TopicPreviewVO resolveToPreview(Topic topic) {
         TopicPreviewVO vo = new TopicPreviewVO();
