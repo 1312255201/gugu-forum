@@ -22,6 +22,7 @@ import TopicTag from "@/components/TopicTag.vue";
 import {useStore} from "@/store";
 import axios from "axios";
 import ColorDot from "@/components/ColorDot.vue";
+import router from "@/router";
 
 const store = useStore()
 
@@ -172,7 +173,8 @@ navigator.geolocation.getCurrentPosition(position => {
           <div v-if="topics.list.length">
             <div style="margin-top: 10px;display: flex;flex-direction: column;gap: 10px"
                  v-infinite-scroll="updateList">
-              <light-card v-for="item in topics.list" class="topic-card">
+              <light-card v-for="item in topics.list" class="topic-card"
+                          @click="router.push('/index/topic-detail/'+item.id)">
                 <div style="display: flex">
                   <div>
                     <el-avatar :size="30" :src="`${axios.defaults.baseURL}/images${item.avatar}`"/>
@@ -247,12 +249,12 @@ navigator.geolocation.getCurrentPosition(position => {
         </div>
         <div style="display: grid;grid-template-columns: repeat(2,1fr);grid-gap: 10px;margin-top: 10px">
           <div class="friend-link">
-            <a href="https://si.gugufish.cn">
+            <a href="https://si.gugufish.cn" title="咕咕开发的服务器监控系统">
               <el-image style="height: 100%" src="friend.gif"/>
             </a>
           </div>
           <div class="friend-link">
-            <a href="https://mit-sec.top/">
+            <a href="https://mit-sec.top/" title="咕咕的舍友的防漏系统">
               <el-image style="height: 100%" src="friendMIT.png"/>
             </a>
           </div>
@@ -269,7 +271,7 @@ navigator.geolocation.getCurrentPosition(position => {
         </div>
       </div>
     </div>
-    <topic-editor :show="editor" @success="editor = false;updateList()" @close="editor = false"/>
+    <topic-editor :show="editor" @success="onTopicCreate" @close="editor = false"/>
   </div>
 </template>
 

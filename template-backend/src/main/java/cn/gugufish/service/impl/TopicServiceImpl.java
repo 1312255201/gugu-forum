@@ -1,12 +1,11 @@
 package cn.gugufish.service.impl;
 
-import cn.gugufish.entity.dto.Topic;
-import cn.gugufish.entity.dto.TopicType;
+import cn.gugufish.entity.dto.*;
 import cn.gugufish.entity.vo.request.TopicCreateVO;
+import cn.gugufish.entity.vo.response.TopicDetailVO;
 import cn.gugufish.entity.vo.response.TopicPreviewVO;
 import cn.gugufish.entity.vo.response.TopicTopVO;
-import cn.gugufish.mapper.TopicMapper;
-import cn.gugufish.mapper.TopicTypeMapper;
+import cn.gugufish.mapper.*;
 import cn.gugufish.service.TopicService;
 import cn.gugufish.utils.CacheUtils;
 import cn.gugufish.utils.Const;
@@ -14,9 +13,11 @@ import cn.gugufish.utils.FlowUtils;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@Log4j2
 public class TopicServiceImpl extends ServiceImpl<TopicMapper, Topic> implements TopicService {
     @Resource
     TopicTypeMapper mapper;
@@ -31,6 +33,12 @@ public class TopicServiceImpl extends ServiceImpl<TopicMapper, Topic> implements
     FlowUtils flowUtils;
     @Resource
     CacheUtils cacheUtils;
+    @Resource
+    AccountMapper accountMapper;
+    @Resource
+    AccountDetailsMapper accountDetailsMapper;
+    @Resource
+    AccountPrivacyMapper accountPrivacyMapper;
     @Override
     public List<TopicType> listTypes() {
         return mapper.selectList(null);
@@ -69,16 +77,17 @@ public class TopicServiceImpl extends ServiceImpl<TopicMapper, Topic> implements
     }
 
     @Override
-    public List<TopicPreviewVO> listTopicByPage(int page, int type) {
-        String key = Const.FORUM_TOPIC_PREVIEW_CACHE + page + ":" + type;
+    public List<TopicPreviewVO> listTopicByPage(int pageNumber, int type) {
+        String key = Const.FORUM_TOPIC_PREVIEW_CACHE + pageNumber + ":" + type;
         List<TopicPreviewVO> list = cacheUtils.takeListFromCache(key, TopicPreviewVO.class);
         if(list != null)
             return list;
-        List<Topic> topics;
+        Page<Topic> page = Page.of(pageNumber,10);
         if(type == 0)
-            topics = baseMapper.topicList(page * 10);
+            baseMapper.selectPage(page,Wrappers.<Topic>query().orderByDesc("time"));
         else
-            topics = baseMapper.topicListByType(page * 10, type);
+            baseMapper.selectPage(page,Wrappers.<Topic>query().eq("type",type).orderByDesc("time"));
+        List<Topic> topics = page.getRecords();
         if(topics.isEmpty()) return null;
         list = topics.stream().map(this::resolveToPreview).toList();
         cacheUtils.saveListToCache(key, list, 60);
@@ -95,8 +104,30 @@ public class TopicServiceImpl extends ServiceImpl<TopicMapper, Topic> implements
             return vo;
         }).toList();
     }
+
+    @Override
+    public TopicDetailVO getTopic(int tid) {
+        TopicDetailVO vo = new TopicDetailVO();
+        Topic topic = baseMapper.selectById(tid);
+        BeanUtils.copyProperties(topic, vo);
+        TopicDetailVO.User user = new TopicDetailVO.User();
+        vo.setUser(this.fillUserDetailsByPrivacy(user, topic.getUid()));
+        return vo;
+    }
+
+    private <T> T fillUserDetailsByPrivacy(T target, int uid){
+        AccountDetails details = accountDetailsMapper.selectById(uid);
+        Account account = accountMapper.selectById(uid);
+        AccountPrivacy accountPrivacy = accountPrivacyMapper.selectById(uid);
+        String[] ignores = accountPrivacy.hiddenFields();
+        log.info("ignored fields: " + Arrays.toString(ignores));
+        BeanUtils.copyProperties(account, target, ignores);
+        BeanUtils.copyProperties(details, target, ignores);
+        return target;
+    }
     private TopicPreviewVO resolveToPreview(Topic topic) {
         TopicPreviewVO vo = new TopicPreviewVO();
+        BeanUtils.copyProperties(accountMapper.selectById(topic.getUid()), vo);
         BeanUtils.copyProperties(topic, vo);
         List<String> images = new ArrayList<>();
         StringBuilder previewText = new StringBuilder();
