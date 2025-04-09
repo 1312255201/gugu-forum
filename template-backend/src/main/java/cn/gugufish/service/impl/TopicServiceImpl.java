@@ -120,7 +120,6 @@ public class TopicServiceImpl extends ServiceImpl<TopicMapper, Topic> implements
         Account account = accountMapper.selectById(uid);
         AccountPrivacy accountPrivacy = accountPrivacyMapper.selectById(uid);
         String[] ignores = accountPrivacy.hiddenFields();
-        log.info("ignored fields: " + Arrays.toString(ignores));
         BeanUtils.copyProperties(account, target, ignores);
         BeanUtils.copyProperties(details, target, ignores);
         return target;

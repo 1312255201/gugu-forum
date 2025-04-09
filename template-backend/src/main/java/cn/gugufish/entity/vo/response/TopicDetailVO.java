@@ -14,7 +14,7 @@ public class TopicDetailVO {
     User user;
     @Data
     public static class User{
-        Integer uid;
+        Integer id;
         String username;
         String avatar;
         String desc;
