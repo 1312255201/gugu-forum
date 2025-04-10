@@ -2,6 +2,7 @@ package cn.gugufish.service;
 
 import cn.gugufish.entity.dto.Topic;
 import cn.gugufish.entity.dto.TopicType;
+import cn.gugufish.entity.dto.Interact;
 import cn.gugufish.entity.vo.request.TopicCreateVO;
 import cn.gugufish.entity.vo.response.TopicDetailVO;
 import cn.gugufish.entity.vo.response.TopicPreviewVO;
@@ -16,4 +17,5 @@ public interface TopicService extends IService<Topic> {
     List<TopicPreviewVO> listTopicByPage(int page, int type);
     List<TopicTopVO> listTopTopics();
     TopicDetailVO getTopic(int tid);
+    void interact(Interact interact, boolean state);
 }

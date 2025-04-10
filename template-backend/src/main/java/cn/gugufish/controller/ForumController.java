@@ -1,6 +1,7 @@
 package cn.gugufish.controller;
 
 import cn.gugufish.entity.RestBean;
+import cn.gugufish.entity.dto.Interact;
 import cn.gugufish.entity.vo.request.TopicCreateVO;
 import cn.gugufish.entity.vo.response.*;
 import cn.gugufish.service.TopicService;
@@ -10,10 +11,12 @@ import cn.gugufish.utils.ControllerUtils;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Pattern;
 import lombok.extern.log4j.Log4j;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -58,5 +61,13 @@ public class ForumController {
     public RestBean<TopicDetailVO> topic(@RequestParam @Min(0) int tid)
     {
         return RestBean.success(topicService.getTopic(tid));
+    }
+    @GetMapping("/interact")
+    public RestBean<Void> interact(@RequestParam @Min(0) int tid,
+                                   @RequestParam @Pattern(regexp = "(like|collect)") String type,
+                                   @RequestParam boolean state,
+                                   @RequestAttribute(Const.ATTR_USER_ID) int id) {
+        topicService.interact(new Interact(tid, id, new Date(), type), state);
+        return RestBean.success();
     }
 }
