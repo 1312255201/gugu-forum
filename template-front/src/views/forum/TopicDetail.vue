@@ -3,7 +3,7 @@ import {useRoute} from "vue-router";
 import {get} from "@/net";
 import axios from "axios";
 import {computed, reactive} from "vue";
-import {ArrowLeft, Female, Male} from "@element-plus/icons-vue";
+import {Aim, ArrowLeft, Female, Male} from "@element-plus/icons-vue";
 import { QuillDeltaToHtmlConverter } from 'quill-delta-to-html';
 import Card from "@/components/Card.vue";
 import router from "@/router";
@@ -50,6 +50,9 @@ const content = computed(() => {
                         </span>
             <span style="color: dodgerblue" v-if="topic.data.user.gender === 0">
                             <el-icon><Male/></el-icon>
+                        </span>
+            <span style="color: chartreuse" v-if="topic.data.user.gender === 2">
+                            <el-icon><Aim/></el-icon>
                         </span>
           </div>
           <div class="desc">{{topic.data.user.email}}</div>
