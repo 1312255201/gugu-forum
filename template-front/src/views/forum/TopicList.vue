@@ -11,7 +11,11 @@ import {
   EditPen,
   Link,
   Picture,
-  Microphone
+  Microphone,
+  CircleCheck,
+  Star,
+  FolderOpened,
+  ArrowRightBold
 } from "@element-plus/icons-vue";
 import Weather from "@/components/Weather.vue";
 import {computed, reactive, ref,onMounted,watch} from "vue";
@@ -23,6 +27,7 @@ import axios from "axios";
 import ColorDot from "@/components/ColorDot.vue";
 import router from "@/router";
 import TopicTag from "@/components/TopicTag.vue";
+import TopicCollectList from "@/components/TopicCollectList.vue";
 
 const store = useStore()
 
@@ -41,6 +46,8 @@ const topics = reactive({
   end: false,
   top: []
 })
+const collects = ref(false)
+
 const today = computed(()=>{
   const date = new Date()
   return `${date.getFullYear()} 年 ${date.getMonth() + 1} 月 ${date.getDate()} 日`
@@ -155,6 +162,7 @@ navigator.geolocation.getCurrentPosition(position => {
           <div style="display: grid;grid-template-columns: repeat(3, 1fr);grid-gap: 10px">
             <el-image class="topic-image" v-for="img in item.images" :src="img" fit="cover"></el-image>
           </div>
+
         </light-card>
         <transition name="el-fade-in" mode="out-in">
           <div v-if="topics.list.length">
@@ -184,6 +192,14 @@ navigator.geolocation.getCurrentPosition(position => {
                 <div style="display: grid;grid-template-columns: repeat(3, 1fr);grid-gap: 10px">
                   <el-image class="topic-image" v-for="img in item.images" :src="img" fit="cover"></el-image>
                 </div>
+                <div style="display: flex;gap: 20px;font-size: 13px;margin-top: 10px;opacity: 0.8">
+                  <div>
+                    <el-icon style="vertical-align: middle"><CircleCheck/></el-icon> {{item.like}}点赞
+                  </div>
+                  <div>
+                    <el-icon style="vertical-align: middle"><Star/></el-icon> {{item.collect}}收藏
+                  </div>
+                </div>
               </light-card>
             </div>
           </div>
@@ -193,6 +209,12 @@ navigator.geolocation.getCurrentPosition(position => {
     <div style="width: 300px">
       <div style="position: sticky;top: 20px">
         <light-card>
+          <div class="collect-list-button" @click="collects = true">
+            <span><el-icon><FolderOpened /></el-icon> 查看我的收藏</span>
+            <el-icon style="transform: translateY(3px)"><ArrowRightBold/></el-icon>
+          </div>
+        </light-card>
+        <light-card style="margin-top: 10px">
           <div style="font-weight: bold">
             <!--不加会偏移笑死Lmao-->
             <el-icon><CollectionTag style="translate: 0 2px"/></el-icon>
@@ -252,6 +274,7 @@ navigator.geolocation.getCurrentPosition(position => {
       </div>
     </div>
     <topic-editor :show="editor" @success="onTopicCreate" @close="editor = false"/>
+    <topic-collect-list :show="collects" @close="collects = false"/>
   </div>
 </template>
 
@@ -294,6 +317,18 @@ navigator.geolocation.getCurrentPosition(position => {
     }
   }
 }
+.collect-list-button {
+  font-size: 14px;
+  display: flex;
+  justify-content: space-between;
+  transition: .3s;
+
+  &:hover {
+    cursor: pointer;
+    opacity: 0.6;
+  }
+}
+
 .top-topic {
   display: flex;
 

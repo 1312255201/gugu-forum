@@ -11,12 +11,13 @@ const emit = defineEmits(['check'])
 
 <template>
   <div class="interact-button">
-        <span class="icon" :style="{'color': check ? color : 'unset'}" @click="emit('check')">
-            <slot/>
-        </span>
+    <span class="icon" :style="{'color': check ? color : 'unset'}" @click="emit('check')">
+      <!--    预留插槽放置图标      -->
+      <slot/>
+    </span>
     <span class="name" :style="{'color': color}">
-            {{check ? checkName : name}}
-        </span>
+      {{check ? checkName : name}}
+    </span>
   </div>
 </template>
 
