@@ -3,6 +3,7 @@ package cn.gugufish.controller;
 import cn.gugufish.entity.RestBean;
 import cn.gugufish.entity.dto.Interact;
 import cn.gugufish.entity.vo.request.TopicCreateVO;
+import cn.gugufish.entity.vo.request.TopicUpdateVO;
 import cn.gugufish.entity.vo.response.*;
 import cn.gugufish.service.TopicService;
 import cn.gugufish.service.WeatherService;
@@ -12,7 +13,6 @@ import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
-import lombok.extern.log4j.Log4j;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -58,9 +58,9 @@ public class ForumController {
         return RestBean.success(topicService.listTopTopics());
     }
     @GetMapping("/topic")
-    public RestBean<TopicDetailVO> topic(@RequestParam @Min(0) int tid)
-    {
-        return RestBean.success(topicService.getTopic(tid));
+    public RestBean<TopicDetailVO> topic(@RequestParam @Min(0) int tid,
+                                         @RequestAttribute(Const.ATTR_USER_ID) int id){
+        return RestBean.success(topicService.getTopic(tid, id));
     }
     @GetMapping("/interact")
     public RestBean<Void> interact(@RequestParam @Min(0) int tid,
@@ -73,5 +73,10 @@ public class ForumController {
     @GetMapping("/collects")
     public RestBean<List<TopicPreviewVO>> collects(@RequestAttribute(Const.ATTR_USER_ID) int id){
         return RestBean.success(topicService.listTopicCollects(id));
+    }
+    @PostMapping("/update-topic")
+    public RestBean<Void> updateTopic(@Valid @RequestBody TopicUpdateVO vo,
+                                      @RequestAttribute(Const.ATTR_USER_ID) int id){
+        return controllerUtils.messageHandle(() -> topicService.updateTopic(id, vo));
     }
 }

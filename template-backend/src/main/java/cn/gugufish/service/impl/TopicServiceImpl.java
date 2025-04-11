@@ -2,6 +2,7 @@ package cn.gugufish.service.impl;
 
 import cn.gugufish.entity.dto.*;
 import cn.gugufish.entity.vo.request.TopicCreateVO;
+import cn.gugufish.entity.vo.request.TopicUpdateVO;
 import cn.gugufish.entity.vo.response.TopicDetailVO;
 import cn.gugufish.entity.vo.response.TopicPreviewVO;
 import cn.gugufish.entity.vo.response.TopicTopVO;
@@ -100,6 +101,22 @@ public class TopicServiceImpl extends ServiceImpl<TopicMapper, Topic> implements
         return list;
     }
     @Override
+    public String updateTopic(int uid, TopicUpdateVO vo) {
+        if(!textLimitCheck(vo.getContent()))
+            return "文章内容太多，发文失败！";
+        if(!types.contains(vo.getType()))
+            return "文章类型非法！";
+        baseMapper.update(null, Wrappers.<Topic>update()
+                .eq("uid", uid)
+                .eq("id", vo.getId())
+                .set("title", vo.getTitle())
+                .set("content", vo.getContent().toString())
+                .set("type", vo.getType())
+        );
+        return null;
+    }
+
+    @Override
     public List<TopicPreviewVO> listTopicCollects(int uid) {
         return baseMapper.collectTopics(uid)
                 .stream()
@@ -123,13 +140,13 @@ public class TopicServiceImpl extends ServiceImpl<TopicMapper, Topic> implements
     }
 
     @Override
-    public TopicDetailVO getTopic(int tid) {
+    public TopicDetailVO getTopic(int tid, int uid) {
         TopicDetailVO vo = new TopicDetailVO();
         Topic topic = baseMapper.selectById(tid);
         BeanUtils.copyProperties(topic, vo);
         TopicDetailVO.Interact interact = new TopicDetailVO.Interact(
-                hasInteract(tid, topic.getUid(), "like"),
-                hasInteract(tid, topic.getUid(), "collect")
+                hasInteract(tid, uid, "like"),
+                hasInteract(tid, uid, "collect")
         );
         vo.setInteract(interact);
         TopicDetailVO.User user = new TopicDetailVO.User();
