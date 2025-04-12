@@ -1,6 +1,7 @@
 package cn.gugufish.service.impl;
 
 import cn.gugufish.entity.dto.*;
+import cn.gugufish.entity.vo.request.AddCommentVO;
 import cn.gugufish.entity.vo.request.TopicCreateVO;
 import cn.gugufish.entity.vo.request.TopicUpdateVO;
 import cn.gugufish.entity.vo.response.TopicDetailVO;
@@ -45,6 +46,8 @@ public class TopicServiceImpl extends ServiceImpl<TopicMapper, Topic> implements
     @Resource
     AccountPrivacyMapper accountPrivacyMapper;
     @Resource
+    TopicCommentMapper commentMapper;
+    @Resource
     StringRedisTemplate template;
     @Override
     public List<TopicType> listTypes() {
@@ -61,7 +64,7 @@ public class TopicServiceImpl extends ServiceImpl<TopicMapper, Topic> implements
 
     @Override
     public String createTopic(int uid, TopicCreateVO vo) {
-        if(!textLimitCheck(vo.getContent()))
+        if(!textLimitCheck(vo.getContent(),10000))
             return "字数超出限制，发送失败";
         if(!types.contains(vo.getType()))
             return "文章类型非法，发送失败";// TODO: 封号qwq你在干什么
@@ -102,7 +105,7 @@ public class TopicServiceImpl extends ServiceImpl<TopicMapper, Topic> implements
     }
     @Override
     public String updateTopic(int uid, TopicUpdateVO vo) {
-        if(!textLimitCheck(vo.getContent()))
+        if(!textLimitCheck(vo.getContent(),10000))
             return "文章内容太多，发文失败！";
         if(!types.contains(vo.getType()))
             return "文章类型非法！";
@@ -115,7 +118,20 @@ public class TopicServiceImpl extends ServiceImpl<TopicMapper, Topic> implements
         );
         return null;
     }
-
+    @Override
+    public String createComment(int uid, AddCommentVO vo) {
+        if(!textLimitCheck(JSONObject.parseObject(vo.getContent()), 2000))
+            return "评论内容太多，发表失败！";
+        String key = Const.FORUM_TOPIC_COMMENT_COUNTER + uid;
+        if(!flowUtils.limitPeriodCounterCheck(key, 2, 60))
+            return "发表评论频繁，请稍后再试！";
+        TopicComment comment = new TopicComment();
+        comment.setUid(uid);
+        BeanUtils.copyProperties(vo, comment);
+        comment.setTime(new Date());
+        commentMapper.insert(comment);
+        return null;
+    }
     @Override
     public List<TopicPreviewVO> listTopicCollects(int uid) {
         return baseMapper.collectTopics(uid)
@@ -236,12 +252,12 @@ public class TopicServiceImpl extends ServiceImpl<TopicMapper, Topic> implements
         return vo;
     }
 
-    private boolean textLimitCheck(JSONObject object){
+    private boolean textLimitCheck(JSONObject object, int max){
         if(object == null){return false;}
         long length = 0;
         for (Object op : object.getJSONArray("ops")) {
             length += JSONObject.from(op).getString("insert").length();
-            if(length > 10000)return false;
+            if(length > max) return false;
         }
         return true;
     }

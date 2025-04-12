@@ -19,7 +19,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 import java.util.function.Supplier;
-
+/**
+ * 用户账户相关操作接口
+ */
 @RestController
 @RequestMapping("/api/user")
 public class AccountController {
@@ -31,6 +33,12 @@ public class AccountController {
     AccountPrivacyService  accountPrivacyService;
     @Resource
     ControllerUtils utils;
+
+    /**
+     * 获取账户的基本信息
+     * @param id 账户的ID
+     * @return 账户的基本信息
+     */
     @GetMapping("/info")
     public RestBean<AccountVO> info(@RequestAttribute(Const.ATTR_USER_ID) int id){
         Account account = accountService.findAccountById(id);

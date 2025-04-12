@@ -5,6 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+/**
+ * Minio对象存储配置配置
+ */
 @Slf4j
 @Configuration
 public class MinioConfiguration {

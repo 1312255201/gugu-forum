@@ -79,4 +79,9 @@ public class ForumController {
                                       @RequestAttribute(Const.ATTR_USER_ID) int id){
         return controllerUtils.messageHandle(() -> topicService.updateTopic(id, vo));
     }
+    @PostMapping("/add-comment")
+    public RestBean<Void> addComment(@Valid @RequestBody AddCommentVO vo,
+                                     @RequestAttribute(Const.ATTR_USER_ID) int id){
+        return utils.messageHandle(() -> topicService.createComment(id, vo));
+    }
 }

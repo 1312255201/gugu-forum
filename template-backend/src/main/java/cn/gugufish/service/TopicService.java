@@ -3,6 +3,7 @@ package cn.gugufish.service;
 import cn.gugufish.entity.dto.Topic;
 import cn.gugufish.entity.dto.TopicType;
 import cn.gugufish.entity.dto.Interact;
+import cn.gugufish.entity.vo.request.AddCommentVO;
 import cn.gugufish.entity.vo.request.TopicCreateVO;
 import cn.gugufish.entity.vo.request.TopicUpdateVO;
 import cn.gugufish.entity.vo.response.TopicDetailVO;
@@ -21,4 +22,5 @@ public interface TopicService extends IService<Topic> {
     void interact(Interact interact, boolean state);
     List<TopicPreviewVO> listTopicCollects(int uid);
     String updateTopic(int uid, TopicUpdateVO vo);
+    String createComment(int uid, AddCommentVO vo);
 }
