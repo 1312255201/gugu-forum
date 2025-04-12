@@ -85,4 +85,9 @@ public class ForumController {
                                      @RequestAttribute(Const.ATTR_USER_ID) int id){
         return controllerUtils.messageHandle(() -> topicService.createComment(id, vo));
     }
+    @GetMapping("/comments")
+    public RestBean<List<CommentVO>> comments(@RequestParam @Min(0) int tid,
+                                              @RequestParam @Min(0) int page){
+        return RestBean.success(topicService.comments(tid, page + 1));
+    }
 }
