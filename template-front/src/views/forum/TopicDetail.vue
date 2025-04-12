@@ -24,7 +24,8 @@ const topic = reactive({
   data: null,
   like: false,
   collect: false,
-  comments: []
+  comments: [],
+  page: 1
 })
 
 const edit = ref(false)
@@ -39,6 +40,7 @@ const init = () => get(`api/forum/topic?tid=${tid}`, data => {
   topic.data = data
   topic.like = data.interact.like
   topic.collect = data.interact.collect
+  loadComments(1)
 })
 init()
 function convertToHtml(content) {
