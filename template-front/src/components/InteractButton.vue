@@ -10,8 +10,8 @@ const emit = defineEmits(['check'])
 </script>
 
 <template>
-  <div class="interact-button">
-    <span class="icon" :style="{'color': check ? color : 'unset'}" @click="emit('check')">
+  <div class="interact-button" @click="emit('check')">
+    <span class="icon" :style="{'color': check ? color : 'unset'}">
       <!--    预留插槽放置图标      -->
       <slot/>
     </span>
@@ -25,21 +25,17 @@ const emit = defineEmits(['check'])
 .interact-button {
   display: inline-block;
   height: 20px;
+  transition: .3s;
+  vertical-align: middle;
 
   .name {
     font-size: 13px;
     margin-left: 5px;
     opacity: 0.7;
   }
-
-  .icon {
-    vertical-align: middle;
-    transition: .3s;
-
-    &:hover {
-      cursor: pointer;
-      font-size: 18px;
-    }
+  &:hover {
+    cursor: pointer;
+    font-size: 18px;
   }
 }
 </style>

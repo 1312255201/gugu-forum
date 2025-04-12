@@ -2,6 +2,7 @@ package cn.gugufish.controller;
 
 import cn.gugufish.entity.RestBean;
 import cn.gugufish.entity.dto.Interact;
+import cn.gugufish.entity.vo.request.AddCommentVO;
 import cn.gugufish.entity.vo.request.TopicCreateVO;
 import cn.gugufish.entity.vo.request.TopicUpdateVO;
 import cn.gugufish.entity.vo.response.*;
@@ -82,6 +83,6 @@ public class ForumController {
     @PostMapping("/add-comment")
     public RestBean<Void> addComment(@Valid @RequestBody AddCommentVO vo,
                                      @RequestAttribute(Const.ATTR_USER_ID) int id){
-        return utils.messageHandle(() -> topicService.createComment(id, vo));
+        return controllerUtils.messageHandle(() -> topicService.createComment(id, vo));
     }
 }
