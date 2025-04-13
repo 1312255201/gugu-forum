@@ -47,12 +47,12 @@ public class SwaggerConfiguration {
                         .version("1.0")
                         .license(new License()
                                 .name("项目开源地址")
-                                .url("https://github.com/Ketuer/SpringBoot-Vue-Template-Jwt")
+                                .url("https://github.com/1312255201/gugu-forum")
                         )
                 )
                 .externalDocs(new ExternalDocumentation()
-                        .description("我们的官方网站")
-                        .url("https://itbaima.net")
+                        .description("我的小窝")
+                        .url("https://www.gugufish.cn/")
                 );
     }
 
