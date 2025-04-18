@@ -11,10 +11,13 @@
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
     "@vueup/vue-quill": "^1.2.0",
+    "@vueuse/core": "^13.1.0",
     "axios": "^1.8.3",
     "element-plus": "^2.9.6",
     "jquery": "^3.7.1",
     "pinia": "^3.0.1",
+    "pixi-live2d-display": "^0.4.0",
+    "pixi.js": "^6.5.10",
     "quill-delta-to-html": "^0.12.1",
     "quill-image-resize-vue": "^1.0.4",
     "quill-image-super-solution-module": "^2.0.1",

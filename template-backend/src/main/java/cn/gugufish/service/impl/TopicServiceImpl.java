@@ -9,6 +9,7 @@ import cn.gugufish.entity.vo.response.TopicDetailVO;
 import cn.gugufish.entity.vo.response.TopicPreviewVO;
 import cn.gugufish.entity.vo.response.TopicTopVO;
 import cn.gugufish.mapper.*;
+import cn.gugufish.service.NotificationService;
 import cn.gugufish.service.TopicService;
 import cn.gugufish.utils.CacheUtils;
 import cn.gugufish.utils.Const;
@@ -51,6 +52,8 @@ public class TopicServiceImpl extends ServiceImpl<TopicMapper, Topic> implements
     TopicCommentMapper commentMapper;
     @Resource
     StringRedisTemplate template;
+    @Resource
+    NotificationService notificationService;
     @Override
     public List<TopicType> listTypes() {
         return mapper.selectList(null);
@@ -132,6 +135,26 @@ public class TopicServiceImpl extends ServiceImpl<TopicMapper, Topic> implements
         BeanUtils.copyProperties(vo, comment);
         comment.setTime(new Date());
         commentMapper.insert(comment);
+        Topic topic = baseMapper.selectById(vo.getTid());
+        Account account = accountMapper.selectById(uid);
+        if(vo.getQuote() > 0) {
+            TopicComment com = commentMapper.selectById(vo.getQuote());
+            if(!Objects.equals(account.getId(), com.getUid())) {
+                notificationService.addNotification(
+                        com.getUid(),
+                        "您有新的帖子评论回复",
+                        account.getUsername()+" 回复了你发表的评论，快去看看吧！",
+                        "success", "/index/topic-detail/"+com.getTid()
+                );
+            }
+        } else if (!Objects.equals(account.getId(), topic.getUid())) {
+            notificationService.addNotification(
+                    topic.getUid(),
+                    "您有新的帖子回复",
+                    account.getUsername()+" 回复了你发表主题: "+topic.getTitle()+"，快去看看吧！",
+                    "success", "/index/topic-detail/"+topic.getId()
+            );
+        }
         return null;
     }
     @Override
