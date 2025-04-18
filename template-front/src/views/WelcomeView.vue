@@ -1,16 +1,12 @@
 <template>
-    <div style="width: 100vw;height: 100vh;overflow: hidden;display: flex">
-        <div style="flex: 1">
-            <el-image style="width: 100%;height: 100%" fit="cover"
-                      src="https://img1.baidu.com/it/u=4097856652,4033702227&fm=253&fmt=auto&app=120&f=JPEG?w=1422&h=800"/>
-        </div>
+    <div class="welcome-container">
         <div class="welcome-title">
             <div style="font-size: 30px;font-weight: bold">欢迎来到咕咕论坛</div>
             <div style="margin-top: 10px">在这里你可以和广大网友进行交流。</div>
             <div style="margin-top: 5px">快来注册体验一下吧</div>
         </div>
-        <div class="right-card">
-            <router-view v-slot="{ Component }">
+        <div class="center-card">
+            <router-view v-slot="{ Component }" style="margin-bottom: 20px">
                 <transition name="el-fade-in-linear" mode="out-in">
                     <component :is="Component" style="height: 100%"/>
                 </transition>
@@ -24,17 +20,33 @@
 </script>
 
 <style scoped>
-.right-card {
+.welcome-container {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  background-image: url('https://img1.baidu.com/it/u=4097856652,4033702227&fm=253&fmt=auto&app=120&f=JPEG?w=1422&h=800');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.center-card {
   width: 400px;
   z-index: 1;
   background-color: var(--el-bg-color);
+  border-radius: 8px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
 }
 
 .welcome-title {
-    position: absolute;
-    bottom: 30px;
-    left: 30px;
-    color: white;
-    text-shadow: 0 0 10px black;
+  position: absolute;
+  bottom: 30px;
+  left: 30px;
+  color: white;
+  text-shadow: 0 0 10px black;
 }
 </style>
