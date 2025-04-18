@@ -28,6 +28,12 @@ export const useStore = defineStore('general',{
                 if(type.id === id)
                     return type
             }
+        },
+        avatarUserUrl(avatar) {
+            if(avatar)
+                return `${axios.defaults.baseURL}/images${avatar}`
+            else
+                return '/avatar.jpg'
         }
     }
 })

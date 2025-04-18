@@ -1,8 +1,12 @@
 package cn.gugufish.service.impl;
 
 import cn.gugufish.entity.dto.Account;
+import cn.gugufish.entity.dto.AccountDetails;
+import cn.gugufish.entity.dto.AccountPrivacy;
 import cn.gugufish.entity.vo.request.*;
+import cn.gugufish.mapper.AccountDetailsMapper;
 import cn.gugufish.mapper.AccountMapper;
+import cn.gugufish.mapper.AccountPrivacyMapper;
 import cn.gugufish.service.AccountService;
 import cn.gugufish.utils.Const;
 import cn.gugufish.utils.FlowUtils;
@@ -42,6 +46,12 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
 
     @Resource
     PasswordEncoder passwordEncoder;
+
+    @Resource
+    AccountPrivacyMapper privacyMapper;
+
+    @Resource
+    AccountDetailsMapper detailsMapper;
 
     @Resource
     FlowUtils flow;
@@ -105,6 +115,10 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
             return "内部错误，注册失败";
         } else {
             this.deleteEmailVerifyCode(email);
+            privacyMapper.insert(new AccountPrivacy(account.getId()));
+            AccountDetails details = new AccountDetails();
+            details.setId(account.getId());
+            detailsMapper.insert(details);
             return null;
         }
     }
