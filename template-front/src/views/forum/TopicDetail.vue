@@ -3,7 +3,18 @@ import {useRoute} from "vue-router";
 import {get, post} from "@/net";
 import axios from "axios";
 import {computed, reactive,ref} from "vue";
-import {ArrowLeft, ChatSquare, CircleCheck, Delete, EditPen, Female, Male, Plus, Star} from "@element-plus/icons-vue";
+import {
+  Aim,
+  ArrowLeft,
+  ChatSquare,
+  CircleCheck,
+  Delete,
+  EditPen,
+  Female,
+  Male,
+  Plus,
+  Star
+} from "@element-plus/icons-vue";
 import { QuillDeltaToHtmlConverter } from 'quill-delta-to-html';
 import Card from "@/components/Card.vue";
 import router from "@/router";

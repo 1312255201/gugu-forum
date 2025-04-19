@@ -107,7 +107,7 @@ loadNotification()
           <el-dropdown>
             <el-avatar :src="store.avatarUrl"></el-avatar>
             <template #dropdown>
-              <el-dropdown-item>
+              <el-dropdown-item @click="router.push('/index/user-setting')">
                 <el-icon><Operation/></el-icon>
                 个人设置
               </el-dropdown-item>
