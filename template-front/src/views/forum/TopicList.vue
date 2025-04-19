@@ -109,7 +109,7 @@ navigator.geolocation.getCurrentPosition(position => {
 </script>
 
 <template>
-  <div style="display: flex;margin: 20px auto;gap: 20px; max-width: 1000px">
+  <div style="display: flex;margin: 20px auto;gap: 20px;max-width: 1000px;padding: 0 20px">
     <div style="flex: 1">
       <light-card>
         <div class="create-topic" @click="editor=true">
@@ -258,16 +258,6 @@ navigator.geolocation.getCurrentPosition(position => {
           <div class="friend-link">
             <a href="https://mit-sec.top/" title="咕咕的舍友的防漏系统">
               <el-image style="height: 100%" src="friendMIT.png"/>
-            </a>
-          </div>
-          <div class="friend-link">
-            <a href="https://si.gugufish.cn">
-              <el-image style="height: 100%" src="friend.gif"/>
-            </a>
-          </div>
-          <div class="friend-link">
-            <a href="https://si.gugufish.cn">
-              <el-image style="height: 100%" src="friend.gif"/>
             </a>
           </div>
         </div>
