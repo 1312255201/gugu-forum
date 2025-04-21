@@ -2,9 +2,10 @@
 
 import Card from "@/components/Card.vue";
 import {Lock, Setting, Switch, Tools} from "@element-plus/icons-vue";
-import {reactive, ref} from "vue";
-import {post,get} from "@/net/index.js";
 import {ElMessage} from "element-plus";
+import {onMounted, reactive, ref} from "vue";
+import {apiUserChangePassword, apiUserPrivacy, apiUserPrivacySave} from "@/net/api/user";
+
 
 const form = reactive({
   password: '',
@@ -12,7 +13,7 @@ const form = reactive({
   new_password_repeat: ''
 })
 
-const validatePassword = (rule, value, callback) => {
+const validatePassword = (_, value, callback) => {
   if (value === '') {
     callback(new Error('请再次输入密码'))
   } else if (value !== form.new_password) {
@@ -42,7 +43,7 @@ const onValidate = (prop,isValid)=>valid.value = isValid
 function resetPassword(){
   formRef.value.validate(valid =>{
     if(valid){
-      post("/api/user/change-password",form,()=>{
+      apiUserChangePassword(form, () => {
         ElMessage.success("修改密码成功")
         formRef.value.resetFields();
       })
@@ -60,24 +61,15 @@ const privacy = reactive({
   gender: false
 })
 
-get('/api/user/privacy',data=>{
-  privacy.phone = data.phone
-  privacy.wechat = data.wechat
-  privacy.qq = data.qq =
-  privacy.email = data.email
-  privacy.gender = data.gender
-  saving.value = false
-})
 function savePrivacy(type,status){
-  saving.value = true
-  post('/api/user/save-privacy',{
-    type: type,
-    status: status
-  },()=>{
-    ElMessage.success("隐私修改成功")
-    saving.value = false
-  })
+  apiUserPrivacySave({ type, status }, saving)
 }
+
+onMounted(() => {
+  apiUserPrivacy(data => {
+    Object.assign(privacy, data)
+  })
+})
 </script>
 <template>
   <div style="margin: auto ;max-width: 600px">

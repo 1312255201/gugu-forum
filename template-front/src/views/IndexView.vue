@@ -1,15 +1,11 @@
 <script setup>
-import { logout } from '@/net'
-import router from "@/router";
-import {get} from "@/net/index.js"
-import {useStore} from "@/store/index.js";
-import {reactive, ref} from "vue"
+import {inject, reactive, ref} from "vue";
 import {
   Back,
   Bell,
   ChatDotSquare, Check, Collection, DataLine,
   Document, Files,
-  Location, Lock, Message, Monitor,
+  Location, Lock, Monitor,
   Notification, Operation,
   Position,
   School, Search,
@@ -17,6 +13,7 @@ import {
 } from "@element-plus/icons-vue";
 import LightCard from "@/components/LightCard.vue";
 import UserInfo from "@/components/UserInfo.vue";
+import {apiNotificationDelete, apiNotificationDeleteAll, apiNotificationList} from "@/net/api/user";
 
 const userMenu = [
   {
@@ -43,8 +40,7 @@ const userMenu = [
   }
 ]
 
-const store = useStore()
-const loading = ref(true)
+const loading = inject('userLoading')
 
 const searchInput = reactive({
   type: '1',
@@ -52,23 +48,18 @@ const searchInput = reactive({
 })
 const notification = ref([])
 
-get('api/user/info',(data)=>{
-  store.user = data
-  loading.value = false
-})
-
 function confirmNotification(id, url) {
-  get(`/api/notification/delete?id=${id}`, () => {
+  apiNotificationDelete(id, () => {
     loadNotification()
     window.open(url)
   })
 }
 
 function deleteAllNotification() {
-  get(`/api/notification/delete-all`, loadNotification)
+  apiNotificationDeleteAll(loadNotification)
 }
 const loadNotification =
-    () => get('/api/notification/list', data => notification.value = data)
+    () => apiNotificationList(data => notification.value = data)
 loadNotification()
 
 </script>

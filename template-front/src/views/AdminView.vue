@@ -12,9 +12,7 @@ import {
   User
 } from "@element-plus/icons-vue";
 import UserInfo from "@/components/UserInfo.vue";
-import {get} from "@/net";
-import {useStore} from "@/store";
-import {ref} from "vue";
+import {inject} from "vue";
 
 const adminMenu = [
   {
@@ -37,13 +35,8 @@ const adminMenu = [
   }
 ]
 
-const loading = ref(true)
-const store = useStore()
+const loading = inject('userLoading')
 
-get('/api/user/info', (data) => {
-  store.user = data
-  loading.value = false
-})
 </script>
 
 <template>
