@@ -141,7 +141,7 @@ onMounted(() => {
   </div>
 </template>
 
-<style scoped>
+<style lang="less" scoped>
 .admin-content {
   height: 100vh;
   width: 100vw;
