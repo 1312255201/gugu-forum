@@ -8,6 +8,8 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,7 +28,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Resource
     JwtUtils utils;
+    @Resource
+    StringRedisTemplate template;
 
+    @Value("${spring.security.jwt.expire}")
+    private int expire;
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
@@ -35,11 +41,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         DecodedJWT jwt = utils.resolveJwt(authorization);
         if(jwt != null) {
             UserDetails user = utils.toUser(jwt);
-            UsernamePasswordAuthenticationToken authentication =
-                    new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
-            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            request.setAttribute(Const.ATTR_USER_ID, utils.toId(jwt));
+            if(!template.hasKey(Const.BANNED_BLOCK + utils.toId(jwt))) {
+                UsernamePasswordAuthenticationToken authentication =
+                        new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+                request.setAttribute(Const.ATTR_USER_ID, utils.toId(jwt));
+            } else {
+                utils.invalidateJwt(authorization);
+            }
         }
         filterChain.doFilter(request, response);
     }

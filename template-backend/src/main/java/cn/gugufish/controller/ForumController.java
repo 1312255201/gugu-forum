@@ -1,11 +1,13 @@
 package cn.gugufish.controller;
 
 import cn.gugufish.entity.RestBean;
+import cn.gugufish.entity.dto.Account;
 import cn.gugufish.entity.dto.Interact;
 import cn.gugufish.entity.vo.request.AddCommentVO;
 import cn.gugufish.entity.vo.request.TopicCreateVO;
 import cn.gugufish.entity.vo.request.TopicUpdateVO;
 import cn.gugufish.entity.vo.response.*;
+import cn.gugufish.service.AccountService;
 import cn.gugufish.service.TopicService;
 import cn.gugufish.service.WeatherService;
 import cn.gugufish.utils.Const;
@@ -30,6 +32,8 @@ public class ForumController {
     TopicService topicService;
     @Resource
     ControllerUtils controllerUtils;
+    @Resource
+    AccountService accountService;
     @GetMapping("/weather")
     public RestBean<WeatherVO> weather(double longitude,double latitude){
         WeatherVO vo = weatherService.fetchWeather( longitude, latitude);
@@ -47,6 +51,10 @@ public class ForumController {
     @PostMapping("/create-topic")
     public RestBean<Void> createTopic(@RequestAttribute(Const.ATTR_USER_ID) int id,
                                       @Valid @RequestBody TopicCreateVO vo){
+        Account account = accountService.findAccountById(id);
+        if(account.isMute()) {
+            return RestBean.forbidden("您已被禁言，无法创建新的主题");
+        }
         return controllerUtils.messageHandle(()-> topicService.createTopic(id, vo));
     }
     @GetMapping("/list-topic")
@@ -83,6 +91,10 @@ public class ForumController {
     @PostMapping("/add-comment")
     public RestBean<Void> addComment(@Valid @RequestBody AddCommentVO vo,
                                      @RequestAttribute(Const.ATTR_USER_ID) int id){
+        Account account = accountService.findAccountById(id);
+        if(account.isMute()) {
+            return RestBean.forbidden("您已被禁言，无法创建新的回复");
+        }
         return controllerUtils.messageHandle(() -> topicService.createComment(id, vo));
     }
     @GetMapping("/comments")
