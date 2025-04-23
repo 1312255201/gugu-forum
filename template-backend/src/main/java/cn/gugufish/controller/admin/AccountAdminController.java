@@ -1,4 +1,4 @@
-package cn.gugufish.controller;
+package cn.gugufish.controller.admin;
 
 
 import cn.gugufish.entity.RestBean;
@@ -50,6 +50,7 @@ public class AccountAdminController {
 
     @PostMapping("/save")
     public RestBean<Void> saveAccount(@RequestBody JSONObject object) {
+        //TODO 这里有个错误，如果详细信息内容是空的会导致保存失败，导致程序异常退出报错，需要修复
         int id = object.getInteger("id");
         Account account = service.findAccountById(id);
         Account save = object.toJavaObject(Account.class);

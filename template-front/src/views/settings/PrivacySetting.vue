@@ -68,6 +68,7 @@ function savePrivacy(type,status){
 onMounted(() => {
   apiUserPrivacy(data => {
     Object.assign(privacy, data)
+    saving.value = false
   })
 })
 </script>

@@ -166,24 +166,25 @@ onMounted(() => {
     display: flex;
     align-items: center;
     box-sizing: border-box;
+    :deep(.el-tabs__header) {
+      height: 32px;
+      margin-bottom: 0;
+      border-bottom: none;
+    }
+
+    :deep(.el-tabs__nav) {
+      gap: 10px;
+      border: none;
+    }
+
+    :deep(.el-tabs__item) {
+      height: 32px;
+      padding: 0 15px;
+      border-radius: 6px;
+      border: solid 1px var(--el-border-color);
+    }
   }
 }
 
-:deep(.el-tabs__header) {
-  height: 32px;
-  margin-bottom: 0;
-  border-bottom: none;
-}
 
-:deep(.el-tabs__nav) {
-  gap: 10px;
-  border: none;
-}
-
-:deep(.el-tabs__item) {
-  height: 32px;
-  padding: 0 15px;
-  border-radius: 6px;
-  border: solid 1px var(--el-border-color);
-}
 </style>
