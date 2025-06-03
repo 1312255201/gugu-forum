@@ -19,7 +19,7 @@ const userMenu = [
   {
     title: '校园论坛', icon: Location, sub: [
       { title: '帖子广场', icon: ChatDotSquare, index: '/index' },
-      { title: '失物招领', icon: Bell },
+      { title: '失物招领', icon: Bell, index: '/index/lost-found' },
       { title: '校园活动', icon: Notification },
       { title: '表白墙', icon: Umbrella },
       { title: '广告招商', icon: School }

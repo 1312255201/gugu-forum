@@ -44,6 +44,18 @@ const router = createRouter({
                         }
                     ]
                 }, {
+                    path: 'lost-found',
+                    name: 'lost-found',
+                    component: () => import('@/views/lostfound/LostFoundList.vue')
+                }, {
+                    path: 'lost-found/create',
+                    name: 'lost-found-create',
+                    component: () => import('@/views/lostfound/LostFoundCreate.vue')
+                }, {
+                    path: 'lost-found/:id',
+                    name: 'lost-found-detail',
+                    component: () => import('@/views/lostfound/LostFoundDetail.vue')
+                }, {
                     path: 'user-setting',
                     name: 'user-setting',
                     component: () => import('@/views/settings/UserSetting.vue')
