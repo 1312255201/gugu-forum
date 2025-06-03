@@ -42,10 +42,10 @@ public class ImageServiceImpl extends ServiceImpl<ImageStoreMapper, StoreImage> 
                 .object(imageName)
                 .build();
         try{
+            String avatar = accountMapper.selectById(id).getAvatar();
             minioClient.putObject(args);
             if(accountMapper.update(null, Wrappers.<Account>update()
                     .eq("id",id).set("avatar",imageName))>0){
-                String avatar = accountMapper.selectById(id).getAvatar();
                 this.deleteOldAvatar(avatar);
                 return imageName;
             }
