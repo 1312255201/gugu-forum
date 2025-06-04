@@ -28,7 +28,7 @@
   justify-content: center;
   align-items: center;
   position: relative;
-  background-image: url('https://img1.baidu.com/it/u=4097856652,4033702227&fm=253&fmt=auto&app=120&f=JPEG?w=1422&h=800');
+  background-image: url('/bg.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
