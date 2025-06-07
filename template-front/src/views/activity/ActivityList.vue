@@ -205,9 +205,9 @@ onMounted(() => {
   align-items: center;
 }
 
-.activity-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+.activity-list {
+  display: flex;
+  flex-direction: column;
   gap: 20px;
   margin-bottom: 20px;
 }
@@ -220,19 +220,23 @@ onMounted(() => {
   cursor: pointer;
   background: white;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  min-height: 180px;
 }
 
 .activity-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
   border-color: #409eff;
 }
 
 .activity-cover {
-  height: 200px;
+  width: 280px;
+  height: 180px;
   overflow: hidden;
   position: relative;
   background: #f5f5f5;
+  flex-shrink: 0;
 }
 
 .activity-cover img {
@@ -254,39 +258,45 @@ onMounted(() => {
 
 .activity-info {
   padding: 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .activity-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 15px;
+  margin-bottom: 12px;
 }
 
 .activity-title {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: bold;
   color: #2c3e50;
   margin: 0;
   flex: 1;
-  margin-right: 10px;
-  line-height: 1.4;
+  margin-right: 15px;
+  line-height: 1.3;
 }
 
 .activity-meta {
-  margin-bottom: 15px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 12px;
 }
 
 .meta-item {
   display: flex;
   align-items: center;
-  margin-bottom: 8px;
   color: #606266;
   font-size: 14px;
 }
 
 .meta-item .el-icon {
-  margin-right: 8px;
+  margin-right: 6px;
   color: #909399;
 }
 
@@ -294,7 +304,12 @@ onMounted(() => {
   color: #606266;
   font-size: 14px;
   line-height: 1.6;
-  margin-bottom: 15px;
+  margin-bottom: 12px;
+  flex: 1;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .activity-footer {
@@ -304,7 +319,8 @@ onMounted(() => {
   font-size: 12px;
   color: #909399;
   border-top: 1px solid #f0f0f0;
-  padding-top: 15px;
+  padding-top: 12px;
+  margin-top: auto;
 }
 
 .empty-state {
@@ -317,8 +333,29 @@ onMounted(() => {
     padding: 15px;
   }
   
-  .activity-grid {
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  .activity-card {
+    flex-direction: column;
+    min-height: auto;
+  }
+  
+  .activity-cover {
+    width: 100%;
+    height: 200px;
+  }
+  
+  .activity-meta {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .activity-title {
+    font-size: 18px;
+  }
+  
+  .activity-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
   }
 }
 </style> 
