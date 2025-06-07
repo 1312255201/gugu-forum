@@ -7,7 +7,8 @@
     <div v-else-if="activity" class="activity-detail">
       <!-- 返回按钮 -->
       <div class="back-button">
-        <el-button @click="goBack" icon="ArrowLeft" type="primary" text>
+        <el-button @click="goBack"  type="primary" text>
+          <el-icon><ArrowLeft/></el-icon>
           返回活动列表
         </el-button>
       </div>
@@ -96,6 +97,7 @@
     
     <div v-else class="error-state">
       <el-empty description="活动不存在或已被删除">
+        <el-icon><ArrowLeft/></el-icon>
         <el-button type="primary" @click="goBack">返回活动列表</el-button>
       </el-empty>
     </div>

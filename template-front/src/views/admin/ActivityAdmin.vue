@@ -2,7 +2,8 @@
   <div class="activity-admin-container">
     <div class="page-header">
       <h1>校园活动管理</h1>
-      <el-button type="primary" @click="showCreateDialog = true" icon="Plus">
+      <el-button type="primary" @click="showCreateDialog = true">
+        <el-icon><Plus/></el-icon>
         发布新活动
       </el-button>
     </div>
@@ -12,7 +13,7 @@
       <template #header>
         <div class="card-header">
           <span>活动列表</span>
-          <el-button text @click="fetchActivities" icon="Refresh">刷新</el-button>
+          <el-button text @click="fetchActivities" ><el-icon><Refresh/></el-icon>刷新</el-button>
         </div>
       </template>
 
@@ -45,7 +46,8 @@
         <el-table-column label="操作" width="250" fixed="right">
           <template #default="{ row }">
             <el-button-group>
-              <el-button size="small" @click="editActivity(row)" icon="Edit">
+              <el-button size="small" @click="editActivity(row)" >
+                <el-icon><Edit/> </el-icon>
                 编辑
               </el-button>
               <el-dropdown @command="(command) => handleStatusCommand(command, row)">
@@ -60,7 +62,8 @@
                   </el-dropdown-menu>
                 </template>
               </el-dropdown>
-                             <el-button size="small" type="danger" @click="deleteActivityItem(row)" icon="Delete">
+              <el-button size="small" type="danger" @click="deleteActivityItem(row)" >
+              <el-icon><Delete/></el-icon>
                  删除
                </el-button>
             </el-button-group>
@@ -150,8 +153,8 @@
       
       <template #footer>
         <span class="dialog-footer">
-          <el-button @click="handleDialogClose">取消</el-button>
-          <el-button type="primary" @click="submitActivity" :loading="submitting">
+          <el-button @click="handleDialogClose" icon="Close">取消</el-button>
+          <el-button type="primary" @click="submitActivity" :loading="submitting" icon="Check">
             {{ editingActivity ? '更新活动' : '发布活动' }}
           </el-button>
         </span>
@@ -163,7 +166,7 @@
 <script setup>
 import { ref, onMounted, reactive } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Plus, Edit, Delete, Refresh, Upload, ArrowDown } from '@element-plus/icons-vue'
+import { Plus, Edit, Delete, Refresh, Upload, ArrowDown, Close, Check } from '@element-plus/icons-vue'
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css'
 import { 

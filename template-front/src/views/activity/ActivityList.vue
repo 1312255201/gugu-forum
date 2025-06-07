@@ -13,6 +13,7 @@
         <el-option label="进行中" :value="1" />
         <el-option label="已结束" :value="2" />
       </el-select>
+      <el-button @click="fetchActivities"  type="primary" text><el-icon><Refresh/></el-icon>刷新</el-button>
     </div>
 
     <!-- 活动列表 -->
@@ -84,7 +85,7 @@
 import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
-import { Calendar, Location, Clock, User } from '@element-plus/icons-vue'
+import { Calendar, Location, Clock, User, Refresh } from '@element-plus/icons-vue'
 import { getActivityList } from '@/net/activity'
 
 const router = useRouter()
