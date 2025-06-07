@@ -22,7 +22,7 @@ const adminMenu = [
       { title: '用户管理', icon: User, index: '/admin/user' },
       { title: '帖子广场管理', icon: ChatDotSquare, index: '/admin/forum' },
       { title: '失物招领管理', icon: Bell },
-      { title: '校园活动管理', icon: Notification },
+      { title: '校园活动管理', icon: Notification, index: '/admin/activity' },
       { title: '表白墙管理', icon: Umbrella },
       { title: '合作机构管理', icon: School }
     ]

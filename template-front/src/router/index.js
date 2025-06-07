@@ -56,6 +56,14 @@ const router = createRouter({
                     name: 'lost-found-detail',
                     component: () => import('@/views/lostfound/LostFoundDetail.vue')
                 }, {
+                    path: 'activity',
+                    name: 'activity',
+                    component: () => import('@/views/activity/ActivityList.vue')
+                }, {
+                    path: 'activity/:id',
+                    name: 'activity-detail',
+                    component: () => import('@/views/activity/ActivityDetail.vue')
+                }, {
                     path: 'user-setting',
                     name: 'user-setting',
                     component: () => import('@/views/settings/UserSetting.vue')
@@ -82,6 +90,10 @@ const router = createRouter({
                     path: 'forum',
                     name: 'admin-forum',
                     component: () => import('@/views/admin/ForumAdmin.vue')
+                }, {
+                    path: 'activity',
+                    name: 'admin-activity',
+                    component: () => import('@/views/admin/ActivityAdmin.vue')
                 }
             ]
         }
@@ -90,7 +102,7 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
     const unauthorized = isUnauthorized(), admin = isRoleAdmin()
-    if(to.name.startsWith('welcome') && !unauthorized) {
+    if(to.name && to.name.startsWith('welcome') && !unauthorized) {
         next('/index')
     } else if(to.fullPath.startsWith('/admin') && !admin) {
         next('/index')
