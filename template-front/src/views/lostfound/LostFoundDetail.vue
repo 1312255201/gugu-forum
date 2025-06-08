@@ -127,24 +127,22 @@ import {
   ArrowLeft, ArrowDown, User, Location, Clock, Phone, 
   Check, Refresh, Delete 
 } from '@element-plus/icons-vue'
+import {useStore} from "@/store";
 
 const route = useRoute()
 const router = useRouter()
 const loading = ref(false)
 const lostFound = ref(null)
 
+const userstore = useStore()
 // 计算是否为作者
 const isAuthor = computed(() => {
-  // 这里需要获取当前用户ID，暂时用简单判断
-  // 实际项目中应该从用户状态管理中获取当前用户信息
   return lostFound.value && lostFound.value.uid === getCurrentUserId()
 })
 
-// 获取当前用户ID（示例实现）
+
 const getCurrentUserId = () => {
-  // 这里应该从用户状态管理或token中获取当前用户ID
-  // 暂时返回一个示例值
-  return 1
+  return userstore.user.id
 }
 
 // 获取详情
