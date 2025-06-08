@@ -117,6 +117,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
             this.deleteEmailVerifyCode(email);
             privacyMapper.insert(new AccountPrivacy(account.getId()));
             AccountDetails details = new AccountDetails();
+            details.setGender(2);
             details.setId(account.getId());
             detailsMapper.insert(details);
             return null;
