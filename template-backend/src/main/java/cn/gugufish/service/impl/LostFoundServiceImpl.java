@@ -142,33 +142,4 @@ public class LostFoundServiceImpl extends ServiceImpl<LostFoundMapper, LostFound
         // 如果都不是，尝试toString然后解析
         return null;
     }
-    
-    /**
-     * 转换DTO为VO（保留原方法以兼容）
-     */
-    private LostFoundVO convertToVO(LostFound lostFound) {
-        LostFoundVO vo = new LostFoundVO();
-        BeanUtils.copyProperties(lostFound, vo);
-        
-        // 解析图片JSON字符串
-        try {
-            if (lostFound.getImages() != null && !lostFound.getImages().isEmpty()) {
-                List<String> imageList = JSON.parseObject(lostFound.getImages(), List.class);
-                vo.setImages(imageList);
-            }
-        } catch (Exception e) {
-            // 如果解析失败，设置为空列表
-            vo.setImages(List.of());
-        }
-        
-        // 设置状态文本
-        switch (lostFound.getStatus()) {
-            case 0 -> vo.setStatusText("寻找中");
-            case 1 -> vo.setStatusText("已找到");
-            case 2 -> vo.setStatusText("已过期");
-            default -> vo.setStatusText("未知状态");
-        }
-        
-        return vo;
-    }
-} 
+}
