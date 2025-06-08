@@ -4,7 +4,7 @@
 
 <template>
   <div>
-    我是论坛管理
+    论坛管理界面
   </div>
 </template>
 

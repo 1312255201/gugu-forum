@@ -21,7 +21,7 @@ const userMenu = [
       { title: '帖子广场', icon: ChatDotSquare, index: '/index' },
       { title: '失物招领', icon: Bell, index: '/index/lost-found' },
       { title: '校园活动', icon: Notification, index: '/index/activity' },
-      { title: '表白墙', icon: Umbrella },
+      { title: '表白墙', icon: Umbrella, index: '/index/love-wall' },
       { title: '广告招商', icon: School }
     ]
   }, {

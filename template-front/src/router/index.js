@@ -64,6 +64,10 @@ const router = createRouter({
                     name: 'activity-detail',
                     component: () => import('@/views/activity/ActivityDetail.vue')
                 }, {
+                    path: 'love-wall',
+                    name: 'love-wall',
+                    component: () => import('@/views/lovewall/LoveWall.vue')
+                }, {
                     path: 'user-setting',
                     name: 'user-setting',
                     component: () => import('@/views/settings/UserSetting.vue')
@@ -94,6 +98,10 @@ const router = createRouter({
                     path: 'activity',
                     name: 'admin-activity',
                     component: () => import('@/views/admin/ActivityAdmin.vue')
+                }, {
+                    path: 'love-wall',
+                    name: 'admin-love-wall',
+                    component: () => import('@/views/admin/LoveWallAdmin.vue')
                 }
             ]
         }
