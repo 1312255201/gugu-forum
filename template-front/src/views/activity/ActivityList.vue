@@ -7,7 +7,7 @@
 
     <!-- 筛选器 -->
     <div class="filter-bar">
-      <el-select v-model="selectedStatus" @change="filterActivities" placeholder="按状态筛选" clearable style="width: 150px;">
+      <el-select v-model="selectedStatus"  placeholder="按状态筛选" clearable style="width: 150px;">
         <el-option label="全部" value="" />
         <el-option label="未开始" :value="0" />
         <el-option label="进行中" :value="1" />
@@ -112,11 +112,6 @@ const fetchActivities = () => {
     ElMessage.error(message || '获取活动列表失败')
     loading.value = false
   })
-}
-
-// 筛选活动
-const filterActivities = () => {
-  // 通过computed自动处理
 }
 
 // 跳转到详情页
