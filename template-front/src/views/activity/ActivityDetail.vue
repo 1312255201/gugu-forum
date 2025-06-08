@@ -1,7 +1,6 @@
 <template>
   <div class="activity-detail-container">
-    <div v-if="loading" class="loading-container">
-      <el-loading />
+    <div v-if="loading" class="loading-container" v-loading="true">
     </div>
     
     <div v-else-if="activity" class="activity-detail">

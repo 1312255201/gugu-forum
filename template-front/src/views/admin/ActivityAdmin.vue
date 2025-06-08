@@ -77,8 +77,7 @@
       v-model="showCreateDialog" 
       :title="editingActivity ? '编辑活动' : '发布新活动'"
       width="60%"
-      :before-close="handleDialogClose"
-    >
+      :before-close="handleDialogClose">
       <el-form :model="activityForm" :rules="activityRules" ref="activityFormRef" label-width="100px">
         <el-form-item label="活动标题" prop="title">
           <el-input v-model="activityForm.title" placeholder="请输入活动标题" />
@@ -95,8 +94,7 @@
             placeholder="选择活动开始时间"
             format="YYYY-MM-DD HH:mm"
             value-format="YYYY-MM-DDTHH:mm:ss"
-            style="width: 100%"
-          />
+            style="width: 100%"/>
         </el-form-item>
         
         <el-form-item label="结束时间">
@@ -106,8 +104,7 @@
             placeholder="选择活动结束时间（可选）"
             format="YYYY-MM-DD HH:mm"
             value-format="YYYY-MM-DDTHH:mm:ss"
-            style="width: 100%"
-          />
+            style="width: 100%"/>
         </el-form-item>
         
         <el-form-item label="参与人数">
@@ -115,8 +112,7 @@
             v-model="activityForm.maxParticipants" 
             :min="0" 
             placeholder="最大参与人数，0表示不限制"
-            style="width: 100%"
-          />
+            style="width: 100%"/>
           <el-text type="info" size="small">设置为0表示不限制参与人数</el-text>
         </el-form-item>
         
@@ -128,8 +124,7 @@
               :show-file-list="false"
               :on-success="handleCoverUploadSuccess"
               :before-upload="beforeCoverUpload"
-              accept="image/*"
-            >
+              accept="image/*">
               <el-button type="primary" icon="Upload">选择封面图片</el-button>
             </el-upload>
             <div v-if="activityForm.coverImage" class="cover-preview">
@@ -145,8 +140,7 @@
               v-model:content="activityForm.content"
               content-type="html"
               :options="editorOptions"
-              style="height: 300px;"
-            />
+              style="height: 300px;"/>
           </div>
         </el-form-item>
       </el-form>

@@ -44,8 +44,7 @@
           class="photo-item"
           :style="getPhotoPosition(index)"
           @click="selectItem(item)"
-          :class="{ 'selected': selectedItem && selectedItem.id === item.id }"
-        >
+          :class="{ 'selected': selectedItem && selectedItem.id === item.id }">
           <div class="photo-wrapper">
             <img :src="item.avatar" :alt="item.nickname" />
             <div class="photo-info">
@@ -68,8 +67,7 @@
       :close-on-press-escape="true"
       :modal="true"
       :append-to-body="true"
-      destroy-on-close
-    >
+      destroy-on-close>
       <div v-if="selectedItem" class="detail-content">
         <div class="detail-header">
           <div class="avatar-section">
@@ -88,8 +86,7 @@
               :type="likedItems.has(selectedItem.id) ? 'info' : 'danger'" 
               circle 
               :disabled="likeLoading || likedItems.has(selectedItem.id)"
-              v-loading="likeLoading"
-            >
+              v-loading="likeLoading">
               {{ likedItems.has(selectedItem.id) ? '💔' : '❤️' }} {{ selectedItem.likeCount }}
             </el-button>
           </div>
@@ -147,8 +144,7 @@
       :close-on-press-escape="true"
       :modal="true"
       :append-to-body="true"
-      destroy-on-close
-    >
+      destroy-on-close>
       <div class="my-posts-list">
         <div v-if="myPosts.length === 0" class="empty-state">
           <el-empty description="您还没有发布过表白信息" />
@@ -730,34 +726,4 @@ const formatTime = (timeStr) => {
   padding: 40px;
 }
 
-/* 响应式设计 */
-@media (max-width: 768px) {
-  .top-nav {
-    flex-direction: column;
-    gap: 15px;
-    text-align: center;
-  }
-  
-  .filter-bar {
-    flex-wrap: wrap;
-  }
-  
-  .heart-container {
-    height: 400px;
-  }
-  
-  .photo-item {
-    width: 60px;
-    height: 60px;
-  }
-  
-  .detail-header {
-    flex-direction: column;
-    gap: 20px;
-  }
-  
-  .posts-grid {
-    grid-template-columns: 1fr;
-  }
-}
 </style> 

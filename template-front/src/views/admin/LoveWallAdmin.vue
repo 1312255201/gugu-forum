@@ -77,8 +77,7 @@
                       :src="photo" 
                       :alt="`照片${index + 1}`"
                       @click="previewPhotos(item.photos, index)"
-                      class="photo-thumb"
-                    />
+                      class="photo-thumb"/>
                     <div v-if="item.photos.length > 4" class="more-photos">
                       +{{ item.photos.length - 4 }}
                     </div>
