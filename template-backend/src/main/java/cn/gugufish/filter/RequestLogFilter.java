@@ -1,6 +1,7 @@
 package cn.gugufish.filter;
 
 import cn.gugufish.utils.Const;
+import cn.gugufish.utils.IpUtils;
 import cn.gugufish.utils.SnowflakeIdGenerator;
 import com.alibaba.fastjson2.JSONObject;
 import jakarta.annotation.Resource;
@@ -84,11 +85,12 @@ public class RequestLogFilter extends OncePerRequestFilter {
         if(id != null) {
             User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             log.info("请求URL: \"{}\" ({}) | 远程IP地址: {} │ 身份: {} (UID: {}) | 角色: {} | 请求参数列表: {}",
-                    request.getServletPath(), request.getMethod(), request.getRemoteAddr(),
+                    request.getServletPath(), request.getMethod(), IpUtils.getRealClientIp(request),
                     user.getUsername(), id, user.getAuthorities(), object);
         } else {
             log.info("请求URL: \"{}\" ({}) | 远程IP地址: {} │ 身份: 未验证 | 请求参数列表: {}",
-                    request.getServletPath(), request.getMethod(), request.getRemoteAddr(), object);
+                    request.getServletPath(), request.getMethod(), IpUtils.getRealClientIp(request), object);
         }
+        //TODO : 整体代码修复添加新IP工具类， 用来适配部署服务器后Nginx反代导致IP错误的问题，本工具类没有测试临时添加TODO
     }
 }

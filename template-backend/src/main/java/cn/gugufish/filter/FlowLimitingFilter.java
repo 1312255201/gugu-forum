@@ -3,6 +3,7 @@ package cn.gugufish.filter;
 import cn.gugufish.entity.RestBean;
 import cn.gugufish.utils.Const;
 import cn.gugufish.utils.FlowUtils;
+import cn.gugufish.utils.IpUtils;
 import jakarta.annotation.Resource;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -44,7 +45,8 @@ public class FlowLimitingFilter extends HttpFilter {
 
     @Override
     protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-        String address = request.getRemoteAddr();
+        //String address = request.getRemoteAddr();
+        String address = IpUtils.getRealClientIp(request); // TODO: 修复bug，在部署的时候，反代会导致获取IP均为本地IP，修改后没测试过部署服务器，测试后删除（BugFish留）。
         if ("OPTIONS".equals(request.getMethod()) && !tryCount(address))
             this.writeBlockMessage(response);
         else

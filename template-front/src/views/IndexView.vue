@@ -81,8 +81,6 @@ loadNotification()
                 <el-option value="1" label="帖子广场"/>
                 <el-option value="2" label="失物招领"/>
                 <el-option value="3" label="校园活动"/>
-                <el-option value="4" label="表白墙"/>
-                <el-option value="5" label="教务通知"/>
               </el-select>
             </template>
           </el-input>

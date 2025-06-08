@@ -5,8 +5,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
 /**
- * Minio对象存储配置配置
+ * MinIO对象存储服务配置类
+ * 主要用于存储和管理项目中的文件资源，如：
+ * - 用户头像图片
+ * - 帖子附件文件
+ * - 其他媒体资源
+ * 
+ * @author GuguFish
  */
 @Slf4j
 @Configuration
@@ -17,12 +24,21 @@ public class MinioConfiguration {
     String username;
     @Value("${spring.minio.password}")
     String password;
+    /**
+     * 创建MinIO客户端Bean
+     * 配置并初始化MinIO客户端，用于与MinIO服务器进行交互
+     * 包括文件上传、下载、删除等操作
+     *
+     * @return 配置完成的MinioClient实例
+     */
     @Bean
     public MinioClient minioClient(){
-        log.info("MinioClient初始化中");
+        log.info("正在初始化MinioClient，服务端点：{}", endpoint);
         return MinioClient.builder()
+                // 设置MinIO服务器端点地址
                 .endpoint(endpoint)
-                .credentials(username,password)
+                // 设置访问凭据（用户名和密码）
+                .credentials(username, password)
                 .build();
     }
 }

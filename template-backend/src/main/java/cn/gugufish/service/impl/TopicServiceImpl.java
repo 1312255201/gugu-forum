@@ -72,7 +72,7 @@ public class TopicServiceImpl extends ServiceImpl<TopicMapper, Topic> implements
         if(!textLimitCheck(vo.getContent(),10000))
             return "字数超出限制，发送失败";
         if(!types.contains(vo.getType()))
-            return "文章类型非法，发送失败";// TODO: 封号qwq你在干什么
+            return "文章类型非法，发送失败"; // TODO: 封号qwq你在干什么,本条TODO预留封号逻辑，如果发送超过数据库的文章类型，可以考虑用户尝试使用发包工具测试服务器，可以直接封号，但是发现types在启动时候会更新一次，在启动过程中更新types会让用户可以正常发送types但是会在这里被拦截，需要解决(BugFish留)
         String key = Const.FORUM_TOPIC_CREATE_COUNTER + uid;
         if(!flowUtils.limitPeriodCounterCheck(key,4,3600))
             return "发文过快，请稍后再试";
