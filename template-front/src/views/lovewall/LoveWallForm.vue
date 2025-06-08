@@ -209,9 +209,7 @@ const presetTags = [
 
 // 上传配置
 const uploadUrl = computed(() => axios.defaults.baseURL + '/api/image/cache')
-const uploadHeaders = computed(() => ({
-  accessHeader
-}))
+const uploadHeaders = computed(() => accessHeader())
 
 // 表单验证规则
 const rules = {
