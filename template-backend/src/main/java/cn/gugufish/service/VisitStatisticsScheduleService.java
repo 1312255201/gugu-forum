@@ -163,9 +163,9 @@ public class VisitStatisticsScheduleService {
             
             if (existingStats != null) {
                 // 更新现有记录
-                visitStatisticsMapper.updatePvCount(statisticsDate, pageViews);
+                visitStatisticsMapper.incrementPageViews(statisticsDate, pageViews);
                 if (hllBytes != null) {
-                    visitStatisticsMapper.updateUvData(statisticsDate, hllBytes, uniqueVisitors);
+                    visitStatisticsMapper.updateUniqueVisitors(statisticsDate, hllBytes, uniqueVisitors);
                 }
                 log.debug("更新统计数据: 日期={}, PV={}, UV={}", dateKey, pageViews, uniqueVisitors);
             } else {

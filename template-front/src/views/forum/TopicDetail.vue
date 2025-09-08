@@ -29,6 +29,7 @@ import {
   apiForumTopic,
   apiForumUpdateTopic
 } from "@/net/api/forum";
+import { recordVisit } from '@/net/statistics.js';
 
 const route = useRoute()
 const store = useStore()
@@ -51,12 +52,21 @@ const comment = reactive({
   quote: null
 })
 
-const init = () => apiForumTopic(tid, data => {
-  topic.data = data
-  topic.like = data.interact.like
-  topic.collect = data.interact.collect
-  loadComments(1)
-})
+const init = async () => {
+  // 记录页面访问
+  try {
+    await recordVisit();
+  } catch (error) {
+    console.error('记录页面访问失败:', error);
+  }
+  
+  apiForumTopic(tid, data => {
+    topic.data = data
+    topic.like = data.interact.like
+    topic.collect = data.interact.collect
+    loadComments(1)
+  })
+}
 init()
 function convertToHtml(content) {
   const ops = JSON.parse(content).ops

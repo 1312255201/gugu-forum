@@ -5,7 +5,12 @@ import { get, post } from "@/net/index.js";
  * @returns {Promise} 请求结果
  */
 export function recordVisit() {
-    return post('/api/statistics/visit', {});
+    return new Promise((resolve, reject) => {
+        post('/api/statistics/visit', {}, 
+            (data) => resolve({ success: true, data }),
+            (message, status) => resolve({ success: false, message, status })
+        );
+    });
 }
 
 /**
@@ -14,7 +19,12 @@ export function recordVisit() {
  * @returns {Promise} 统计汇总数据
  */
 export function getStatisticsSummary() {
-    return get('/api/statistics/summary');
+    return new Promise((resolve, reject) => {
+        get('/api/statistics/summary',
+            (data) => resolve({ success: true, data }),
+            (message, status) => resolve({ success: false, message, status })
+        );
+    });
 }
 
 /**
@@ -23,8 +33,11 @@ export function getStatisticsSummary() {
  * @returns {Promise} 指定日期的统计数据
  */
 export function getStatisticsByDate(date) {
-    return get('/api/statistics/date', {
-        date: date
+    return new Promise((resolve, reject) => {
+        get(`/api/statistics/date?date=${encodeURIComponent(date)}`,
+            (data) => resolve({ success: true, data }),
+            (message, status) => resolve({ success: false, message, status })
+        );
     });
 }
 
@@ -35,9 +48,11 @@ export function getStatisticsByDate(date) {
  * @returns {Promise} 日期范围内的统计数据列表
  */
 export function getStatisticsByDateRange(startDate, endDate) {
-    return get('/api/statistics/range', {
-        startDate: startDate,
-        endDate: endDate
+    return new Promise((resolve, reject) => {
+        get(`/api/statistics/range?startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}`,
+            (data) => resolve({ success: true, data }),
+            (message, status) => resolve({ success: false, message, status })
+        );
     });
 }
 
@@ -47,8 +62,11 @@ export function getStatisticsByDateRange(startDate, endDate) {
  * @returns {Promise} 最近N天的统计数据列表
  */
 export function getRecentStatistics(days = 7) {
-    return get('/api/statistics/recent', {
-        days: days
+    return new Promise((resolve, reject) => {
+        get(`/api/statistics/recent?days=${days}`,
+            (data) => resolve({ success: true, data }),
+            (message, status) => resolve({ success: false, message, status })
+        );
     });
 }
 
@@ -58,6 +76,9 @@ export function getRecentStatistics(days = 7) {
  * @returns {string} 格式化后的字符串
  */
 export function formatNumber(num) {
+    if (num == null || num === undefined) {
+        return '0';
+    }
     if (num >= 10000) {
         return (num / 10000).toFixed(1) + 'w';
     } else if (num >= 1000) {
@@ -98,6 +119,9 @@ export function formatMonthDay(date) {
  * @returns {number} 增长率百分比
  */
 export function calculateGrowthRate(current, previous) {
+    if (current == null || previous == null) {
+        return 0;
+    }
     if (previous === 0) {
         return current > 0 ? 100 : 0;
     }

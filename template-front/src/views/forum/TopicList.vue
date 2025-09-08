@@ -28,6 +28,7 @@ import router from "@/router";
 import TopicTag from "@/components/TopicTag.vue";
 import TopicCollectList from "@/components/TopicCollectList.vue";
 import {apiForumTopicList, apiForumTopTopics, apiForumWeather, apiForumGetIp} from "@/net/api/forum";
+import { recordVisit } from '@/net/statistics.js';
 
 const store = useStore()
 
@@ -79,7 +80,14 @@ function resetList() {
 }
 const ipAddr = ref("");
 
-onMounted(() => {
+onMounted(async () => {
+  // 记录页面访问
+  try {
+    await recordVisit();
+  } catch (error) {
+    console.error('记录页面访问失败:', error);
+  }
+  
   apiForumTopTopics(data => topics.top = data)
   apiForumGetIp( (data) => {
     ipAddr.value = data;

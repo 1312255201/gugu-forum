@@ -144,6 +144,7 @@ import { ElMessage } from 'element-plus'
 import { 
   Plus, Search, Refresh, Location, Clock, User, Phone 
 } from '@element-plus/icons-vue'
+import { recordVisit } from '@/net/statistics.js';
 
 const router = useRouter()
 const loading = ref(false)
@@ -218,7 +219,14 @@ const formatDate = (dateStr) => {
   })
 }
 
-onMounted(() => {
+onMounted(async () => {
+  // 记录页面访问
+  try {
+    await recordVisit();
+  } catch (error) {
+    console.error('记录页面访问失败:', error);
+  }
+  
   searchLostFound()
 })
 </script>
@@ -430,4 +438,4 @@ onMounted(() => {
     grid-template-columns: 1fr;
   }
 }
-</style> 
+</style>

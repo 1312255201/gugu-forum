@@ -87,6 +87,7 @@ import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { Calendar, Location, Clock, User, Refresh } from '@element-plus/icons-vue'
 import { getActivityList } from '@/net/activity'
+import { recordVisit } from '@/net/statistics.js';
 
 const router = useRouter()
 const loading = ref(false)
@@ -165,7 +166,14 @@ const handleImageError = (event) => {
   event.target.parentElement.innerHTML = '<div class="default-cover"><i class="el-icon-picture"></i></div>'
 }
 
-onMounted(() => {
+onMounted(async () => {
+  // 记录页面访问
+  try {
+    await recordVisit();
+  } catch (error) {
+    console.error('记录页面访问失败:', error);
+  }
+  
   fetchActivities()
 })
 </script>
@@ -354,4 +362,4 @@ onMounted(() => {
     gap: 5px;
   }
 }
-</style> 
+</style>

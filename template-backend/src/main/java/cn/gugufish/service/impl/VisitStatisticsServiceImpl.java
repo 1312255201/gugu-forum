@@ -58,6 +58,10 @@ public class VisitStatisticsServiceImpl implements VisitStatisticsService {
         // 同时记录UV
         recordUniqueVisitor(userIp, userAgent);
         
+        // 确保数据库记录存在，然后更新PV计数
+        visitStatisticsMapper.insertOrUpdateRecord(today);
+        visitStatisticsMapper.incrementPageViews(today, 1L);
+        
         log.debug("记录页面访问: IP={}, UserAgent={}", userIp, userAgent);
     }
     
@@ -82,6 +86,10 @@ public class VisitStatisticsServiceImpl implements VisitStatisticsService {
             byte[] hllBytes = hll.toBytes();
             stringRedisTemplate.opsForValue().set(uvKey, Base64.getEncoder().encodeToString(hllBytes));
             stringRedisTemplate.expire(uvKey, 2, TimeUnit.DAYS);
+            
+            // 同步UV数据到数据库
+            visitStatisticsMapper.insertOrUpdateRecord(today);
+            visitStatisticsMapper.updateUniqueVisitors(today, hllBytes, hll.cardinality());
             
             log.debug("记录独立访客: IP={}, UserAgent={}, Identifier={}", userIp, userAgent, userIdentifier);
             

@@ -128,6 +128,7 @@ import {
   Check, Refresh, Delete 
 } from '@element-plus/icons-vue'
 import {useStore} from "@/store";
+import { recordVisit } from '@/net/statistics.js';
 
 const route = useRoute()
 const router = useRouter()
@@ -235,7 +236,14 @@ const formatDate = (dateStr) => {
   })
 }
 
-onMounted(() => {
+onMounted(async () => {
+  // 记录页面访问
+  try {
+    await recordVisit();
+  } catch (error) {
+    console.error('记录页面访问失败:', error);
+  }
+  
   fetchDetail()
 })
 </script>
@@ -413,4 +421,4 @@ onMounted(() => {
     }
   }
 }
-</style> 
+</style>

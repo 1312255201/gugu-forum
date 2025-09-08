@@ -6,7 +6,7 @@
           <el-icon><DataAnalysis /></el-icon>
           访问统计
         </h1>
-        <p class="page-description">基于HyperLogLog算法的高效UV/PV统计分析</p>
+        <p class="page-description">论坛访问情况统计分析</p>
       </div>
       <div class="header-actions">
         <el-button type="primary" :icon="Refresh" @click="refreshData" :loading="loading">

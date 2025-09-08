@@ -4,6 +4,7 @@ import cn.gugufish.entity.RestBean;
 import cn.gugufish.entity.vo.response.VisitStatisticsVO;
 import cn.gugufish.entity.vo.response.VisitStatisticsSummaryVO;
 import cn.gugufish.service.VisitStatisticsService;
+import cn.gugufish.utils.IpUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -37,7 +38,7 @@ public class VisitStatisticsController {
     @Operation(summary = "记录页面访问", description = "记录用户的页面访问，用于统计PV和UV")
     public RestBean<Void> recordVisit(HttpServletRequest request) {
         try {
-            String userIp = getClientIpAddress(request);
+            String userIp = IpUtils.getRealClientIp(request);
             String userAgent = request.getHeader("User-Agent");
             
             // 记录页面访问（同时会记录UV）
@@ -126,42 +127,5 @@ public class VisitStatisticsController {
         }
     }
     
-    /**
-     * 获取客户端真实IP地址
-     */
-    private String getClientIpAddress(HttpServletRequest request) {
-        String xForwardedFor = request.getHeader("X-Forwarded-For");
-        if (xForwardedFor != null && !xForwardedFor.isEmpty() && !"unknown".equalsIgnoreCase(xForwardedFor)) {
-            // 多级代理的情况，第一个IP为客户端真实IP
-            return xForwardedFor.split(",")[0].trim();
-        }
-        
-        String xRealIp = request.getHeader("X-Real-IP");
-        if (xRealIp != null && !xRealIp.isEmpty() && !"unknown".equalsIgnoreCase(xRealIp)) {
-            return xRealIp;
-        }
-        
-        String proxyClientIp = request.getHeader("Proxy-Client-IP");
-        if (proxyClientIp != null && !proxyClientIp.isEmpty() && !"unknown".equalsIgnoreCase(proxyClientIp)) {
-            return proxyClientIp;
-        }
-        
-        String wlProxyClientIp = request.getHeader("WL-Proxy-Client-IP");
-        if (wlProxyClientIp != null && !wlProxyClientIp.isEmpty() && !"unknown".equalsIgnoreCase(wlProxyClientIp)) {
-            return wlProxyClientIp;
-        }
-        
-        String httpClientIp = request.getHeader("HTTP_CLIENT_IP");
-        if (httpClientIp != null && !httpClientIp.isEmpty() && !"unknown".equalsIgnoreCase(httpClientIp)) {
-            return httpClientIp;
-        }
-        
-        String httpXForwardedFor = request.getHeader("HTTP_X_FORWARDED_FOR");
-        if (httpXForwardedFor != null && !httpXForwardedFor.isEmpty() && !"unknown".equalsIgnoreCase(httpXForwardedFor)) {
-            return httpXForwardedFor;
-        }
-        
-        // 如果以上都没有，返回request.getRemoteAddr()
-        return request.getRemoteAddr();
-    }
+
 }

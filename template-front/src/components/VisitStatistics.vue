@@ -150,6 +150,7 @@ import * as echarts from 'echarts';
 import { 
   getStatisticsSummary, 
   getRecentStatistics, 
+  recordVisit,
   formatNumber, 
   formatGrowthRate, 
   formatMonthDay,
@@ -192,7 +193,20 @@ const loadStatistics = async () => {
   try {
     const response = await getStatisticsSummary();
     if (response.success) {
-      Object.assign(summary, response.data);
+      // 确保所有数值字段都有默认值，避免null值导致的错误
+      const data = response.data || {};
+      Object.assign(summary, {
+        todayPv: data.todayPv || 0,
+        todayUv: data.todayUv || 0,
+        yesterdayPv: data.yesterdayPv || 0,
+        yesterdayUv: data.yesterdayUv || 0,
+        weekPv: data.weekPv || 0,
+        weekUv: data.weekUv || 0,
+        monthPv: data.monthPv || 0,
+        monthUv: data.monthUv || 0,
+        recent7Days: data.recent7Days || [],
+        recent30Days: data.recent30Days || []
+      });
     } else {
       ElMessage.error('获取统计数据失败: ' + response.message);
     }
@@ -207,9 +221,13 @@ const loadStatistics = async () => {
 // 加载图表数据
 const loadChartData = async () => {
   try {
-    const data = await getRecentStatistics(parseInt(chartPeriod.value));
-    chartData.value = data;
-    updateChart();
+    const response = await getRecentStatistics(parseInt(chartPeriod.value));
+    if (response.success) {
+      chartData.value = response.data || [];
+      updateChart();
+    } else {
+      ElMessage.error('加载图表数据失败: ' + response.message);
+    }
   } catch (error) {
     console.error('加载图表数据失败:', error);
     ElMessage.error('加载图表数据失败');
@@ -365,6 +383,13 @@ const resizeChart = () => {
 
 // 组件挂载
 onMounted(async () => {
+  // 记录页面访问
+  try {
+    await recordVisit();
+  } catch (error) {
+    console.error('记录页面访问失败:', error);
+  }
+  
   await loadStatistics();
   await loadChartData();
   await nextTick();
