@@ -116,6 +116,12 @@
             <artifactId>minio</artifactId>
             <version>8.5.12</version>
         </dependency>
+        <!--    HyperLogLog统计依赖    -->
+        <dependency>
+            <groupId>net.agkn</groupId>
+            <artifactId>hll</artifactId>
+            <version>1.6.0</version>
+        </dependency>
     </dependencies>
     <profiles>
         <!-- 开发环境 -->

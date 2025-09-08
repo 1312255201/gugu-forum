@@ -102,6 +102,10 @@ const router = createRouter({
                     path: 'love-wall',
                     name: 'admin-love-wall',
                     component: () => import('@/views/admin/LoveWallAdmin.vue')
+                }, {
+                    path: 'statistics',
+                    name: 'admin-statistics',
+                    component: () => import('@/views/admin/StatisticsAdmin.vue')
                 }
             ]
         }

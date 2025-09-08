@@ -1,3 +1,4 @@
 ﻿.idea/
 log/
 template-backend/src/main/resources/application-dev.yml
+.DS_Store

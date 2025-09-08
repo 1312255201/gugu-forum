@@ -8,6 +8,7 @@ import {
   Files,
   Location,
   Monitor, Notification, Position, School,
+  TrendCharts,
   Umbrella,
   User
 } from "@element-plus/icons-vue";
@@ -24,6 +25,7 @@ const adminMenu = [
       { title: '失物招领管理', icon: Bell },
       { title: '校园活动管理', icon: Notification, index: '/admin/activity' },
       { title: '表白墙管理', icon: Umbrella, index: '/admin/love-wall' },
+      { title: '访问统计管理', icon: TrendCharts, index: '/admin/statistics' },
       { title: '合作机构管理', icon: School }
     ]
   }, {
