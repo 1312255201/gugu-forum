@@ -29,4 +29,6 @@ public final class Const {
     public final static String FORUM_TOPIC_CREATE_COUNTER ="forum:topic:create:";
     public final static String FORUM_TOPIC_COMMENT_COUNTER = "forum:topic:comment:";
     public final static String FORUM_TOPIC_PREVIEW_CACHE ="topic:preview:";
+    public static final String REDIS_PV_KEY = "visit:pv:";
+    public static final String REDIS_UV_HLL_KEY = "visit:uv:hll:";
 }
