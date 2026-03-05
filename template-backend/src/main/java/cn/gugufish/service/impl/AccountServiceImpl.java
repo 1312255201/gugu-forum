@@ -8,6 +8,7 @@ import cn.gugufish.mapper.AccountDetailsMapper;
 import cn.gugufish.mapper.AccountMapper;
 import cn.gugufish.mapper.AccountPrivacyMapper;
 import cn.gugufish.service.AccountService;
+import cn.gugufish.service.EmailService;
 import cn.gugufish.utils.Const;
 import cn.gugufish.utils.FlowUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -39,7 +40,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
     int verifyLimit;
 
     @Resource
-    AmqpTemplate rabbitTemplate;
+    EmailService emailService;
 
     @Resource
     StringRedisTemplate stringRedisTemplate;
@@ -87,8 +88,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
                 return "请求频繁，请稍后再试";
             Random random = new Random();
             int code = random.nextInt(899999) + 100000;
-            Map<String, Object> data = Map.of("type",type,"email", email, "code", code);
-            rabbitTemplate.convertAndSend(Const.MQ_MAIL, data);
+            emailService.sendVerifyEmail(type, email, code);
             stringRedisTemplate.opsForValue()
                     .set(Const.VERIFY_EMAIL_DATA + email, String.valueOf(code), 3, TimeUnit.MINUTES);
             return null;
