@@ -58,9 +58,13 @@ public class AccountAdminController {
     }
 
     @PostMapping("/save")
-    public RestBean<Void> saveAccount(@RequestBody JSONObject object) {
+    public RestBean<Void> saveAccount(@RequestBody JSONObject object,
+                                      @RequestAttribute(Const.ATTR_USER_ID) int uid) {
         //TODO 这里有个错误，如果详细信息内容是空的会导致保存失败，导致程序异常退出报错，需要修复(BugFish留)
         int id = object.getInteger("id");
+        if(uid == id) {
+            return RestBean.failure(400, "不能修改自己的账号信息");
+        }
         Account account = service.findAccountById(id);
         Account save = object.toJavaObject(Account.class);
         handleBanned(account, save);
@@ -74,6 +78,14 @@ public class AccountAdminController {
         AccountPrivacy savePrivacy = object.getJSONObject("privacy").toJavaObject(AccountPrivacy.class);
         BeanUtils.copyProperties(savePrivacy, privacy);
         privacyService.saveOrUpdate(savePrivacy);
+        return RestBean.success();
+    }
+    @PostMapping("/change-password")
+    public RestBean<Void> changePassword(@RequestBody JSONObject object) {
+        service.modifyPassword(
+                object.getInteger("id"),
+                object.getString("newPassword")
+        );
         return RestBean.success();
     }
     private void handleBanned(Account old, Account current) {

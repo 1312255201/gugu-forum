@@ -14,4 +14,5 @@ public interface AccountService extends IService<Account>, UserDetailsService {
     String resetConfirm(ConfirmResetVO info);
     String modifyEmail(int id, ModifyEmailVO info);
     String changePassword(int id, ChangePasswordVO info);
+    void modifyPassword(int id, String newPassword);
 }
