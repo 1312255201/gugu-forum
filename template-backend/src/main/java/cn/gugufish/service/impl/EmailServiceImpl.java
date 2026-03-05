@@ -5,9 +5,12 @@ import cn.gugufish.entity.dto.EmailRecord;
 import cn.gugufish.mapper.EmailRecordMapper;
 import cn.gugufish.service.EmailService;
 import cn.gugufish.utils.Const;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import jakarta.annotation.Resource;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class EmailServiceImpl implements EmailService {
@@ -32,4 +35,10 @@ public class EmailServiceImpl implements EmailService {
         recordMapper.insert(emailRecord);
         rabbitTemplate.convertAndSend(Const.MQ_MAIL, emailRecord);
     }
+
+    @Override
+    public List<EmailRecord> listEmailRecord() {
+        return recordMapper.selectList(Wrappers.emptyWrapper());
+    }
+
 }
