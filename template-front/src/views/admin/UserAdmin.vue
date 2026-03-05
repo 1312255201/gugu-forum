@@ -1,18 +1,14 @@
 <script setup>
 import {EditPen, User} from "@element-plus/icons-vue";
 import {apiUserDetailTotal, apiUserList, apiUserSave} from "@/net/api/user";
-import {reactive, watchEffect} from "vue";
+import {reactive, watchEffect,ref} from "vue";
 import {useStore} from "@/store";
 import {ElMessage} from "element-plus";
+import UserEditor from "@/components/UserEditor.vue";
 
 const store = useStore()
 
-const editor = reactive({
-  id: 0,
-  display: false,
-  temp: {},
-  loading: false
-})
+const editorRef = ref()
 
 const userTable = reactive({
   page: 1,
@@ -36,24 +32,6 @@ function userStatus(user) {
     return '正常'
 }
 
-function openUserEditor(user) {
-  editor.id = user.id
-  editor.display = true
-  editor.loading = true
-  apiUserDetailTotal(editor.id, data => {
-    editor.temp = { ...data, ...user }
-    editor.loading = false
-  })
-}
-
-function saveUserDetail() {
-  editor.display = false
-  apiUserSave(editor.temp, () => {
-    const user = userTable.data.find(user => user.id === editor.id)
-    Object.assign(user, editor.temp)
-    ElMessage.success('数据保存成功')
-  })
-}
 </script>
 
 <template>
@@ -81,8 +59,8 @@ function saveUserDetail() {
           <el-tag v-else>普通用户</el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="email" label="电子邮件"/>
-      <el-table-column label="注册时间">
+      <el-table-column prop="email" label="电子邮件" width="200" show-overflow-tooltip/>
+      <el-table-column label="注册时间" width="200" show-overflow-tooltip>
         <template #default="{ row }">
           {{ new Date(row.registerTime).toLocaleString() }}
         </template>
@@ -92,10 +70,10 @@ function saveUserDetail() {
           {{ userStatus(row) }}
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center">
+      <el-table-column label="操作" align="center" fixed="right" width="100">
         <template #default="{ row }">
           <el-button type="primary" size="small" :icon="EditPen"
-                     @click="openUserEditor(row)"
+                     @click="editorRef.openUserEditor(row)"
                      :disabled="row.role === 'admin'">编辑</el-button>
         </template>
       </el-table-column>
@@ -106,45 +84,7 @@ function saveUserDetail() {
                      v-model:page-size="userTable.size"
                      layout="total, sizes, prev, pager, next, jumper"/>
     </div>
-    <el-drawer v-model="editor.display">
-      <template #header>
-        <div>
-          <div style="font-weight: bold">
-            <el-icon><EditPen/></el-icon> 编辑用户信息
-          </div>
-          <div style="font-size: 13px">编辑完成后请点击下方保存按钮</div>
-        </div>
-      </template>
-      <el-form label-position="top">
-        <el-form-item label="用户名">
-          <el-input v-model="editor.temp.username"/>
-        </el-form-item>
-        <el-form-item label="电子邮件">
-          <el-input v-model="editor.temp.email"/>
-        </el-form-item>
-        <div style="display: flex;font-size: 14px;gap: 20px">
-          <div>
-            <span style="margin-right: 10px">禁言</span>
-            <el-switch v-model="editor.temp.mute"/>
-          </div>
-          <el-divider style="height: 30px" direction="vertical"/>
-          <div>
-            <span style="margin-right: 10px">账号封禁</span>
-            <el-switch v-model="editor.temp.banned"/>
-          </div>
-        </div>
-        <div style="margin-top: 10px;color: #606266;font-size: 14px">
-          注册时间: {{ new Date(editor.temp.registerTime).toLocaleString() }}
-        </div>
-        <el-divider/>
-      </el-form>
-      <template #footer>
-        <div style="text-align: center">
-          <el-button type="success" @click="saveUserDetail">保存</el-button>
-          <el-button type="info" @click="editor.display = false">取消</el-button>
-        </div>
-      </template>
-    </el-drawer>
+    <user-editor :user-table="userTable" ref="editorRef"/>
   </div>
 </template>
 
