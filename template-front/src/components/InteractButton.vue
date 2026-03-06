@@ -1,17 +1,24 @@
 <script setup>
-defineProps({
+const props = defineProps({
   name: String,
   checkName: String,
   color: String,
-  check: Boolean
+  check: Boolean,
+  disabled: Boolean
 })
+
+const onClick = () => {
+  if(!props.disabled){
+    emit('check')
+  }
+}
 
 const emit = defineEmits(['check'])
 </script>
 
 <template>
-  <div class="interact-button" @click="emit('check')">
-    <span class="icon" :style="{'color': check ? color : 'unset'}">
+  <div class="interact-button" :class="{'locked': disabled}">
+    <span class="icon" :style="{'color': check ? color : 'unset'}" @click="onClick">
       <!--    预留插槽放置图标      -->
       <slot/>
     </span>
@@ -36,6 +43,14 @@ const emit = defineEmits(['check'])
   &:hover {
     cursor: pointer;
     font-size: 18px;
+  }
+  &.locked {
+    opacity: 0.5;
+
+    .icon:hover {
+      font-size: unset;
+      cursor: not-allowed;
+    }
   }
 }
 </style>

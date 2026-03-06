@@ -18,4 +18,5 @@ public class Topic {
     Date time;
     Integer uid;
     Integer top;
+    Integer locked;
 }

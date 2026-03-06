@@ -30,5 +30,5 @@ public interface TopicService extends IService<Topic> {
     void deleteComment(int id, int uid);
     void deleteTopic(int id);
     void setTopicTop(int tid, boolean top);
-
+    void setTopicLocked(int tid, boolean locked);
 }

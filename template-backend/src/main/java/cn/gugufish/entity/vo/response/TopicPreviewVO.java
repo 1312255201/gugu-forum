@@ -19,4 +19,5 @@ public class TopicPreviewVO {
     int like;
     int collect;
     int top;
+    int locked;
 }
