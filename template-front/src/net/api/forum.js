@@ -47,5 +47,9 @@ export const apiForumCollect = (success) =>
 export const apiForumCollectDelete = (tid, success) =>
     get(`/api/forum/interact?tid=${tid}&type=collect&state=false`, success)
 
+export const apiForumTopicAllList = (page, size, success) =>
+    get(`/api/admin/forum/list?page=${page}&size=${size}`, success)
+
+
 export const apiForumGetIp = (success) =>
     get('api/util/ip',success)
