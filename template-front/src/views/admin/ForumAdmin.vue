@@ -1,8 +1,9 @@
 <script setup>
 import {reactive, ref, watchEffect} from "vue";
-import {apiForumTopicAllList, apiForumTypes} from "@/net/api/forum";
+import {apiForumTopicAllList, apiForumTopicDelete, apiForumTopicTop, apiForumTypes} from "@/net/api/forum";
 import {User} from "@element-plus/icons-vue";
 import {useStore} from "@/store";
+import {ElMessage, ElMessageBox} from "element-plus";
 
 const store = useStore()
 
@@ -16,12 +17,33 @@ const topicList = reactive({
 const types = ref([])
 const findType = type => types.value.find(item => item.id === type)
 
-watchEffect(() =>{
+const deleteTopic = id => {
+  ElMessageBox.confirm('您确定要删除这个帖子吗，删除后永久无法找回？', '删除帖子', {
+    callback: value => {
+      if(value === 'confirm') {
+        apiForumTopicDelete(id, () => {
+          refreshList()
+          ElMessage.success('帖子删除成功')
+        })
+      }
+    }
+  })
+}
+
+const topTopic = (tid, status) => {
+  apiForumTopicTop({ tid, status }, () => {
+    ElMessage.success('帖子置顶状态更新成功')
+    refreshList()
+  })
+}
+
+const refreshList = () => {
   apiForumTopicAllList(topicList.page, topicList.size, data => {
     topicList.list = data.list;
     topicList.total = data.total;
   })
-})
+}
+watchEffect(() => refreshList())
 
 apiForumTypes(data => types.value = data)
 
@@ -57,11 +79,13 @@ apiForumTypes(data => types.value = data)
       </el-table-column>
       <el-table-column prop="time" label="发表时间" width="180" align="center"
                        :formatter="row => new Date(row.time).toLocaleString()"/>
-      <el-table-column label="操作" width="200" fixed="right" align="center">
+      <el-table-column label="操作" width="270" fixed="right" align="center">
         <template #default="{ row }">
           <el-button size="small" type="info" plain>屏蔽</el-button>
           <el-button size="small" type="warning" plain>锁定</el-button>
-          <el-button size="small" type="danger" plain>删除</el-button>
+          <el-button size="small" type="success" @click="topTopic(row.id, false)" v-if="row.top">取消</el-button>
+          <el-button size="small" type="success" @click="topTopic(row.id, true)" plain v-else>置顶</el-button>
+          <el-button size="small" type="danger" plain @click="deleteTopic(row.id)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>

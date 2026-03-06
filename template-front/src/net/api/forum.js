@@ -50,6 +50,11 @@ export const apiForumCollectDelete = (tid, success) =>
 export const apiForumTopicAllList = (page, size, success) =>
     get(`/api/admin/forum/list?page=${page}&size=${size}`, success)
 
+export const apiForumTopicDelete = (tid, success) =>
+    get(`/api/admin/forum/delete?tid=${tid}`, success)
+
+export const apiForumTopicTop = (data, success) =>
+    post('api/admin/forum/top', data, success)
 
 export const apiForumGetIp = (success) =>
     get('api/util/ip',success)

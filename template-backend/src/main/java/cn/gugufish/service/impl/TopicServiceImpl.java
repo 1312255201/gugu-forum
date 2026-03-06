@@ -198,6 +198,21 @@ public class TopicServiceImpl extends ServiceImpl<TopicMapper, Topic> implements
         commentMapper.delete(Wrappers.<TopicComment>query().eq("id", id).eq("uid", uid));
     }
     @Override
+    public void deleteTopic(int id) {
+        baseMapper.deleteById(id);
+        cacheUtils.deleteCachePattern(Const.FORUM_TOPIC_PREVIEW_CACHE + "*");
+        baseMapper.deleteTopicCollect(id);
+    }
+
+    @Override
+    public void setTopicTop(int tid, boolean top) {
+        baseMapper.update(null, Wrappers.<Topic>update()
+                .eq("id", tid)
+                .set("top", top)
+        );
+    }
+
+    @Override
     public List<TopicPreviewVO> listTopicCollects(int uid) {
         return baseMapper.collectTopics(uid)
                 .stream()

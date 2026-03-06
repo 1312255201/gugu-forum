@@ -1,14 +1,12 @@
 package cn.gugufish.controller.admin;
 
 import cn.gugufish.entity.PageRestBean;
+import cn.gugufish.entity.RestBean;
 import cn.gugufish.entity.vo.response.TopicPreviewVO;
 import cn.gugufish.service.TopicService;
 import com.alibaba.fastjson2.JSONObject;
 import jakarta.annotation.Resource;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/admin/forum")
@@ -27,4 +25,19 @@ public class ForumAdminController {
                 page
         );
     }
+    @GetMapping("/delete")
+    public RestBean<Void> delete(@RequestParam int tid){
+        service.deleteTopic(tid);
+        return RestBean.success();
+    }
+
+    @PostMapping("/top")
+    public RestBean<Void> setTop(@RequestBody JSONObject object) {
+        service.setTopicTop(
+                object.getIntValue("tid"),
+                object.getBooleanValue("status")
+        );
+        return RestBean.success();
+    }
+
 }
