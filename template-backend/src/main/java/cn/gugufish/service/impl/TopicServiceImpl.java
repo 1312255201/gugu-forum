@@ -14,6 +14,7 @@ import cn.gugufish.service.TopicService;
 import cn.gugufish.utils.CacheUtils;
 import cn.gugufish.utils.Const;
 import cn.gugufish.utils.FlowUtils;
+import cn.gugufish.utils.ProhibitedUtils;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -42,6 +43,8 @@ public class TopicServiceImpl extends ServiceImpl<TopicMapper, Topic> implements
     FlowUtils flowUtils;
     @Resource
     CacheUtils cacheUtils;
+    @Resource
+    ProhibitedUtils prohibitedUtils;
     @Resource
     AccountMapper accountMapper;
     @Resource
@@ -76,6 +79,8 @@ public class TopicServiceImpl extends ServiceImpl<TopicMapper, Topic> implements
         String key = Const.FORUM_TOPIC_CREATE_COUNTER + uid;
         if(!flowUtils.limitPeriodCounterCheck(key,4,3600))
             return "发文过快，请稍后再试";
+        if(prohibitedUtils.containsProhibitedWord(vo.getContent()))
+            return "包含违禁词，发文失败！";
         Topic topic = new Topic();
         BeanUtils.copyProperties(vo, topic);
         topic.setContent(vo.getContent().toJSONString());
@@ -129,6 +134,8 @@ public class TopicServiceImpl extends ServiceImpl<TopicMapper, Topic> implements
             return "文章内容太多，发文失败！";
         if(!types.contains(vo.getType()))
             return "文章类型非法！";
+        if(prohibitedUtils.containsProhibitedWord(vo.getContent()))
+            return "包含违禁词，发文失败！";
         int result = baseMapper.update(null, Wrappers.<Topic>update()
                 .eq("uid", uid)
                 .eq("id", vo.getId())
@@ -145,6 +152,8 @@ public class TopicServiceImpl extends ServiceImpl<TopicMapper, Topic> implements
         String key = Const.FORUM_TOPIC_COMMENT_COUNTER + uid;
         if(!flowUtils.limitPeriodCounterCheck(key, 2, 60))
             return "发表评论频繁，请稍后再试！";
+        if(prohibitedUtils.containsProhibitedWord(vo.getContent()))
+            return "包含违禁词，发表评论失败！";
         TopicComment comment = new TopicComment();
         comment.setUid(uid);
         BeanUtils.copyProperties(vo, comment);

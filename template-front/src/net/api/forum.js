@@ -62,6 +62,11 @@ export const apiForumTopicLocked = (data, success) =>
 export const apiForumTopicInvisible = (data, success) =>
     post('api/admin/forum/invisible', data, success)
 
+export const apiForumProhibitedList = (success) =>
+    get('/api/admin/forum/prohibited-list', success)
+
+export const apiForumProhibit = (data, success) =>
+    post(`/api/admin/forum/prohibited-save`, data, success)
 
 export const apiForumGetIp = (success) =>
     get('api/util/ip',success)

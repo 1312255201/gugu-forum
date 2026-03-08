@@ -20,4 +20,5 @@ public class TopicPreviewVO {
     int collect;
     int top;
     int locked;
+    int invisible;
 }

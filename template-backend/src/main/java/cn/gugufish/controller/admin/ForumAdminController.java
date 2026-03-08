@@ -4,9 +4,13 @@ import cn.gugufish.entity.PageRestBean;
 import cn.gugufish.entity.RestBean;
 import cn.gugufish.entity.vo.response.TopicPreviewVO;
 import cn.gugufish.service.TopicService;
+import cn.gugufish.utils.ProhibitedUtils;
+import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin/forum")
@@ -14,6 +18,8 @@ public class ForumAdminController {
 
     @Resource
     private TopicService service;
+    @Resource
+    private ProhibitedUtils prohibitedUtils;
 
     @GetMapping("/list")
     public PageRestBean<TopicPreviewVO> list(@RequestParam int page,
@@ -53,6 +59,16 @@ public class ForumAdminController {
                 object.getIntValue("tid"),
                 object.getBooleanValue("status")
         );
+        return RestBean.success();
+    }
+    @GetMapping("/prohibited-list")
+    public RestBean<List<String>> getProhibitedList() {
+        return RestBean.success(prohibitedUtils.getProhibitedWords());
+    }
+
+    @PostMapping("/prohibited-save")
+    public RestBean<Void> saveProhibitedList(@RequestBody JSONArray array) {
+        prohibitedUtils.setProhibitedWords(array.toList(String.class));
         return RestBean.success();
     }
 

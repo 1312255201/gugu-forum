@@ -195,7 +195,7 @@ navigator.geolocation.getCurrentPosition(position => {
                 <div style="margin-top: 5px">
                   <el-tag size="small" effect="dark" type="warning" disable-transitions
                           style="margin-right: 10px;" v-if="item.locked">
-                    <el-icon>
+                    <el-icon style="display: inline">
                       <Lock/>
                     </el-icon>
                     已锁定

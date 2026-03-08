@@ -117,7 +117,7 @@ function deleteComment(id) {
         <div style="text-align: center;flex: 1">
           <el-tag size="small" effect="dark" type="warning" disable-transitions
                   style="margin-right: 10px;" v-if="topic.data.locked">
-            <el-icon>
+            <el-icon style="display: inline">
               <Lock/>
             </el-icon>
             已锁定
