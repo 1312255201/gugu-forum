@@ -1,5 +1,5 @@
 <script setup>
-import {EditPen, Unlock, User} from "@element-plus/icons-vue";
+import {EditPen, Search, Unlock, User} from "@element-plus/icons-vue";
 import {apiUserList,apiUserModifyPassword} from "@/net/api/user";
 import {reactive, watchEffect,ref} from "vue";
 import {useStore} from "@/store";
@@ -9,6 +9,8 @@ import UserEditor from "@/components/UserEditor.vue";
 const store = useStore()
 
 const editorRef = ref()
+const keyword = ref('')
+const searchText = ref('')
 
 const userTable = reactive({
   page: 1,
@@ -17,7 +19,8 @@ const userTable = reactive({
   data: []
 })
 
-watchEffect(() => apiUserList(userTable.page, userTable.size, data => {
+
+watchEffect(() => apiUserList(userTable.page, userTable.size, keyword.value, data => {
   userTable.total = data.total
   userTable.data = data.list
 }))
@@ -49,12 +52,22 @@ function changePassword({ id, username }) {
 
 <template>
   <div class="user-admin">
-    <div class="title">
+    <div class="user-admin-header">
+      <div>
+      <div class="title">
       <el-icon><User/></el-icon>
       论坛用户列表
     </div>
     <div class="desc">
       在这里管理论坛的所有用户，包括账号信息、封禁和禁言处理。
+    </div>
+      </div>
+      <div>
+        <el-input :prefix-icon="Search" placeholder="搜索帖子标题..."
+                  clearable @clear="keyword = ''"
+                  @keydown.enter="keyword = searchText"
+                  v-model="searchText"/>
+      </div>
     </div>
     <el-table :data="userTable.data" height="320">
       <el-table-column prop="id" label="编号" width="80"/>
@@ -106,6 +119,12 @@ function changePassword({ id, username }) {
 
 <style lang="less" scoped>
 .user-admin {
+  .user-admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
   .title {
     font-weight: bold;
   }
