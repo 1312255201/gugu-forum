@@ -19,4 +19,5 @@ public class Topic {
     Integer uid;
     Integer top;
     Integer locked;
+    Integer invisible;
 }

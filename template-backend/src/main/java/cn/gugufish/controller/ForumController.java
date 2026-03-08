@@ -153,7 +153,13 @@ public class ForumController {
     @GetMapping("/topic")
     public RestBean<TopicDetailVO> topic(@RequestParam @Min(0) int tid,
                                          @RequestAttribute(Const.ATTR_USER_ID) int id){
-        return RestBean.success(topicService.getTopic(tid, id));
+        TopicDetailVO topic = topicService.getTopic(tid, id);
+        if(topic != null) {
+            return RestBean.success(topic);
+        } else {
+            return RestBean.failure(404, "帖子不存在或已被屏蔽");
+        }
+
     }
     
     /**

@@ -59,5 +59,9 @@ export const apiForumTopicTop = (data, success) =>
 export const apiForumTopicLocked = (data, success) =>
     post('api/admin/forum/locked', data, success)
 
+export const apiForumTopicInvisible = (data, success) =>
+    post('api/admin/forum/invisible', data, success)
+
+
 export const apiForumGetIp = (success) =>
     get('api/util/ip',success)
