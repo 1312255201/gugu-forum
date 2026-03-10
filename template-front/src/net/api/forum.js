@@ -70,3 +70,9 @@ export const apiForumProhibit = (data, success) =>
 
 export const apiForumGetIp = (success) =>
     get('api/util/ip',success)
+
+export const apiForumUserTopic = (success) =>
+    get('api/forum/user-topic', success)
+
+export const apiForumUserTopicDelete = (tid, success) =>
+    get(`api/forum/delete-topic?tid=${tid}`, success)

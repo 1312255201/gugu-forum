@@ -3,6 +3,7 @@ package cn.gugufish.controller;
 import cn.gugufish.entity.RestBean;
 import cn.gugufish.entity.dto.Account;
 import cn.gugufish.entity.dto.Interact;
+import cn.gugufish.entity.dto.Topic;
 import cn.gugufish.entity.vo.request.AddCommentVO;
 import cn.gugufish.entity.vo.request.TopicCreateVO;
 import cn.gugufish.entity.vo.request.TopicUpdateVO;
@@ -254,4 +255,16 @@ public class ForumController {
         topicService.deleteComment(id, uid);
         return RestBean.success();
     }
+    @GetMapping("/user-topic")
+    public RestBean<List<Topic>> userTopic(@RequestAttribute(Const.ATTR_USER_ID) int uid) {
+        return RestBean.success(topicService.listTopicByUser(uid));
+    }
+
+    @GetMapping("/delete-topic")
+    public RestBean<Void> deleteTopic(@RequestParam @Min(0) int tid,
+                                      @RequestAttribute(Const.ATTR_USER_ID) int uid){
+        topicService.deleteTopic(tid, uid);
+        return RestBean.success();
+    }
+
 }

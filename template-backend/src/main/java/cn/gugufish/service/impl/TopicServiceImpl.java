@@ -217,6 +217,17 @@ public class TopicServiceImpl extends ServiceImpl<TopicMapper, Topic> implements
         cacheUtils.deleteCachePattern(Const.FORUM_TOPIC_PREVIEW_CACHE + "*");
         baseMapper.deleteTopicCollect(id);
     }
+    @Override
+    public void deleteTopic(int tid, int uid) {
+        int result = baseMapper.delete(Wrappers.<Topic>query()
+                .eq("id", tid)
+                .eq("uid", uid)
+        );
+        if(result > 0) {
+            cacheUtils.deleteCachePattern(Const.FORUM_TOPIC_PREVIEW_CACHE + "*");
+            baseMapper.deleteTopicCollect(tid);
+        }
+    }
 
     @Override
     public void setTopicTop(int tid, boolean top) {
@@ -291,6 +302,11 @@ public class TopicServiceImpl extends ServiceImpl<TopicMapper, Topic> implements
             this.saveInteractSchedule(type);
         }
     }
+    @Override
+    public List<Topic> listTopicByUser(int uid) {
+        return baseMapper.selectList(Wrappers.<Topic>query().eq("uid", uid));
+    }
+
     private boolean hasInteract(int tid, int uid, String type) {
         String key = tid + ":" + uid;
         if (template.opsForHash().hasKey(type, key))
