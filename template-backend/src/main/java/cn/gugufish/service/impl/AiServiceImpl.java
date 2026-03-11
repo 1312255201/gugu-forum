@@ -9,7 +9,11 @@ import org.springframework.ai.chat.messages.AssistantMessage;
 import org.springframework.ai.chat.messages.Message;
 import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.model.ChatModel;
+import org.springframework.ai.chat.model.ChatResponse;
+import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+import reactor.core.publisher.Flux;
 
 import java.util.List;
 
@@ -20,8 +24,10 @@ public class AiServiceImpl implements AiService {
     ChatModel chatModel;
 
     @Override
-    public String chatWithAi(JSONArray content) {
-        List<? extends AbstractMessage> list = content.stream().map(item -> {
+    public SseEmitter chatWithAi(JSONArray context) {
+        SseEmitter emitter = new SseEmitter(30000L);
+        List<? extends AbstractMessage> list = context.stream().map(item -> {
+
             JSONObject obj = JSONObject.from(item);
             return switch (obj.getString("type")) {
                 case "user" -> new UserMessage(obj.getString("text"));
@@ -29,6 +35,19 @@ public class AiServiceImpl implements AiService {
                 default -> throw new RuntimeException();
             };
         }).toList();
-        return chatModel.call(list.toArray(new Message[0]));
+        Prompt prompt = new Prompt(list.toArray(new Message[0]));
+        Flux<ChatResponse> flux = chatModel.stream(prompt);
+
+        flux.subscribe(response -> {
+            String text = response.getResult().getOutput().getText();
+            try {
+                emitter.send(text);
+            } catch (Exception e) {
+                emitter.completeWithError(e);
+            }
+        }, emitter::completeWithError, emitter::complete);
+
+        return emitter;
+
     }
 }

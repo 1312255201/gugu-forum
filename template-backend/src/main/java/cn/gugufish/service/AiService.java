@@ -1,7 +1,8 @@
 package cn.gugufish.service;
 
 import com.alibaba.fastjson2.JSONArray;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 public interface AiService {
-    String chatWithAi(JSONArray content);
+    SseEmitter chatWithAi(JSONArray content);
 }

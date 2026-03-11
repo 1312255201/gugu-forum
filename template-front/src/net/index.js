@@ -97,6 +97,17 @@ function post(url, data, success, failure = defaultFailure) {
     internalPost(url, data, accessHeader() , success, failure)
 }
 
+function fetchPost(url, data) {
+    return fetch(axios.defaults.baseURL + url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${takeAccessToken()?.token}`
+        },
+        body: JSON.stringify(data)
+    })
+}
+
 function logout(success, failure = defaultFailure){
     get('/api/auth/logout', () => {
         deleteAccessToken()
@@ -117,4 +128,4 @@ function isRoleAdmin() {
     return takeAccessToken()?.role === 'admin'
 }
 
-export { post, get, login, logout, isUnauthorized, isRoleAdmin, accessHeader }
+export { post, get, login, logout, isUnauthorized, isRoleAdmin, accessHeader, fetchPost }

@@ -2,12 +2,19 @@
 import {ref} from "vue";
 import {CloseBold} from "@element-plus/icons-vue";
 import {apiChatWithAI} from "@/net/api/ai";
+import MarkdownIt from "markdown-it";
+
+const md = new MarkdownIt()
 
 const isOpen = ref(false)
 const inputText = ref('')
 const chatLoading = ref(false)
 
 const messages = ref([])
+
+const renderMarkdown = (text) => {
+  return md.render(text)
+}
 
 const sendMessage = () => {
   if(inputText.value.trim() !== '') {
@@ -21,18 +28,19 @@ const sendMessage = () => {
 
     messages.value.push({
       type: 'assistant',
-      text: 'AI正在努力思考中...',
+      text: '',
       timestamp: new Date()
     })
 
     const context = [ ...messages.value ]
     context.length -= 1
 
-    apiChatWithAI(context, data => {
-      messages.value[messages.value.length - 1].text = data
-      chatLoading.value = false
+    apiChatWithAI(context, text => {
+      messages.value[messages.value.length - 1].text += text
     }, () => {
       messages.value[messages.value.length - 1].text = '生成失败，请重试'
+      chatLoading.value = false
+    }, () => {
       chatLoading.value = false
     })
   }
@@ -54,8 +62,11 @@ const sendMessage = () => {
       <div class="chat-window__messages">
         <div v-for="(message, index) in messages" :key="index"
              :class="[`message-${message.type}`]">
-          <div class="message-text">
+          <div class="message-text" v-if="message.type === 'user'">
             {{ message.text }}
+          </div>
+          <div class="message-text markdown-body" v-if="message.type === 'assistant'"
+               v-html="renderMarkdown(message.text)">
           </div>
         </div>
       </div>
@@ -222,5 +233,11 @@ const sendMessage = () => {
     opacity: 1;
     transform: translateY(0);
   }
+}
+</style>
+<style lang="less">
+.markdown-body {
+  p:first-child { margin-top: 0; }
+  p:last-child { margin-bottom: 0; }
 }
 </style>

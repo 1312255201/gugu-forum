@@ -9,6 +9,7 @@ import cn.gugufish.service.AccountService;
 import cn.gugufish.utils.Const;
 import cn.gugufish.utils.JwtUtils;
 import jakarta.annotation.Resource;
+import jakarta.servlet.DispatcherType;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +22,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.DispatcherTypeRequestMatcher;
+import org.springframework.security.web.util.matcher.NegatedRequestMatcher;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -111,6 +114,8 @@ public class SecurityConfiguration {
                         // 设置认证入口点（未认证时）
                         .authenticationEntryPoint(this::handleProcess)
                 )
+                .securityMatcher(new DispatcherTypeRequestMatcher(DispatcherType.REQUEST))
+                .securityMatcher(new NegatedRequestMatcher(new DispatcherTypeRequestMatcher(DispatcherType.ASYNC)))
                 // 禁用CSRF保护
                 .csrf(AbstractHttpConfigurer::disable)
                 // 配置会话管理为无状态

@@ -16,6 +16,7 @@
     "echarts": "^6.0.0",
     "element-plus": "^2.9.6",
     "jquery": "^3.7.1",
+    "markdown-it": "^14.1.0",
     "pinia": "^3.0.1",
     "pixi-live2d-display": "^0.4.0",
     "pixi.js": "^6.5.10",
