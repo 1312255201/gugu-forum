@@ -6,10 +6,7 @@ import cn.gugufish.entity.dto.Interact;
 import cn.gugufish.entity.vo.request.AddCommentVO;
 import cn.gugufish.entity.vo.request.TopicCreateVO;
 import cn.gugufish.entity.vo.request.TopicUpdateVO;
-import cn.gugufish.entity.vo.response.CommentVO;
-import cn.gugufish.entity.vo.response.TopicDetailVO;
-import cn.gugufish.entity.vo.response.TopicPreviewVO;
-import cn.gugufish.entity.vo.response.TopicTopVO;
+import cn.gugufish.entity.vo.response.*;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -34,4 +31,5 @@ public interface TopicService extends IService<Topic> {
     void setTopicLocked(int tid, boolean locked);
     void setTopicInvisible(int tid, boolean invisible);
     List<Topic> listTopicByUser(int uid);
+    List<TopicSearchVO> searchTopic(String keyword);
 }

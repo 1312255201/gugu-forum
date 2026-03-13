@@ -1,14 +1,13 @@
 package cn.gugufish.service.impl;
 
 import cn.gugufish.entity.dto.*;
+import cn.gugufish.entity.es.TopicDocument;
 import cn.gugufish.entity.vo.request.AddCommentVO;
 import cn.gugufish.entity.vo.request.TopicCreateVO;
 import cn.gugufish.entity.vo.request.TopicUpdateVO;
-import cn.gugufish.entity.vo.response.CommentVO;
-import cn.gugufish.entity.vo.response.TopicDetailVO;
-import cn.gugufish.entity.vo.response.TopicPreviewVO;
-import cn.gugufish.entity.vo.response.TopicTopVO;
+import cn.gugufish.entity.vo.response.*;
 import cn.gugufish.mapper.*;
+import cn.gugufish.repository.TopicRepository;
 import cn.gugufish.service.NotificationService;
 import cn.gugufish.service.TopicService;
 import cn.gugufish.utils.CacheUtils;
@@ -24,6 +23,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -57,6 +57,9 @@ public class TopicServiceImpl extends ServiceImpl<TopicMapper, Topic> implements
     StringRedisTemplate template;
     @Resource
     NotificationService notificationService;
+    @Resource
+    TopicRepository topicRepository;
+
     @Override
     public List<TopicType> listTypes() {
         return mapper.selectList(null);
@@ -307,6 +310,16 @@ public class TopicServiceImpl extends ServiceImpl<TopicMapper, Topic> implements
     @Override
     public List<Topic> listTopicByUser(int uid) {
         return baseMapper.selectList(Wrappers.<Topic>query().eq("uid", uid));
+    }
+    @Override
+    public List<TopicSearchVO> searchTopic(String keyword) {
+        List<SearchHit<TopicDocument>> list = topicRepository.findByTitleOrIntro(keyword);
+        return list.stream().map(item -> {
+            TopicSearchVO vo = new TopicSearchVO();
+            BeanUtils.copyProperties(item.getContent(), vo);
+            vo.setHighlight(item.getHighlightFields());
+            return vo;
+        }).toList();
     }
 
     private boolean hasInteract(int tid, int uid, String type) {

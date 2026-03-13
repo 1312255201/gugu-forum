@@ -1,5 +1,5 @@
 <script setup>
-import {apiForumTypes, apiForumUserTopic, apiForumUserTopicDelete} from "@/net/api/forum";
+import {apiForumUserTopic, apiForumUserTopicDelete} from "@/net/api/forum";
 import {ref} from "vue";
 import Card from "@/components/Card.vue";
 import {useStore} from "@/store";
@@ -26,7 +26,6 @@ const deleteTopic = (id) => {
 const refreshList = () => apiForumUserTopic(data => list.value = data)
 
 refreshList()
-apiForumTypes(data => store.forum.types = data)
 </script>
 
 <template>
