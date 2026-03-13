@@ -62,6 +62,11 @@ const invisibleTopic = (tid, status) => {
     refreshList()
   })
 }
+const changeTopicType = (tid, type) => {
+  apiTopicChangeType(tid, type, () => {
+    ElMessage.success('帖子类型修改成功')
+  })
+}
 
 const refreshList = () => {
   apiForumTopicAllList(topicList.page, topicList.size, keyword.value, data => {
@@ -111,12 +116,18 @@ watchEffect(() => refreshList())
         </el-link>
       </template>
     </el-table-column>
-    <el-table-column label="帖子类型" width="120">
+    <el-table-column label="帖子类型" width="180">
       <template #default="{ row }">
-        <div class="topic-type">
-          <div class="type-dot" :style="{ backgroundColor: findType(row.type)?.color ?? '#bababa' }"></div>
-          <div>{{ findType(row.type)?.name ?? '未知类型' }}</div>
-        </div>
+        <el-select v-model="row.type" @change="id => changeTopicType(row.id, id)">
+          <el-option :label="type.name" :value="type.id" v-for="type in types">
+            <template #default>
+            <div class="topic-type">
+              <div class="type-dot" :style="{ backgroundColor: findType(row.type)?.color ?? '#bababa' }"></div>
+              <div>{{ findType(row.type)?.name ?? '未知类型' }}</div>
+            </div>
+            </template>
+          </el-option>
+        </el-select>
       </template>
     </el-table-column>
     <el-table-column label="帖子作者" width="150">

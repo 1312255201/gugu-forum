@@ -87,6 +87,15 @@ public class TopicServiceImpl extends ServiceImpl<TopicMapper, Topic> implements
         BeanUtils.copyProperties(vo, type);
         mapper.insert(type);
     }
+    @Override
+    public void changeTopicType(int tid, int type) {
+        if(baseMapper.update(null, Wrappers.<Topic>update()
+                .eq("id", tid)
+                .set("type", type)
+        ) > 1) {
+            cacheUtils.deleteCachePattern(Const.FORUM_TOPIC_PREVIEW_CACHE + "*");
+        }
+    }
     private Set<Integer> types = null;
     @PostConstruct
     private void initTypes() {
