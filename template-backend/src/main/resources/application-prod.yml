@@ -1,26 +1,34 @@
-﻿#生产环境配置
-server:
-  port: 80
+﻿# 开发环境配置
 springdoc:
-  api-docs:
-    enabled: false
-mybatis-plus:
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  paths-to-match: /api/**
+  swagger-ui:
+    operations-sorter: alpha
 spring:
   mail:
-    host: smtp.163.com
-    username: javastudy111@163.com
-    password: VKQFYZMUSUZGSGEG
+    host: smtp.qq.com
+    username: test@qq.com
+    password: abcd
+    ssl:
+      enabled: true
   rabbitmq:
     addresses: localhost
     username: admin
     password: admin
     virtual-host: /
-  datasource:
-    url: jdbc:mysql://localhost:3306/test
-    username: root
+    listener:
+      simple:
+        retry:
+          enabled: true
+          max-attempts: 3
+          initial-interval: 1000ms
+  elasticsearch:
+    uris: localhost:9200
+    username: elastic
     password: 123456
+  datasource:
+    url: jdbc:mysql://localhost:3306/qwq
+    username: qwqqwqqwq
+    password: qwqqwqqwq
     driver-class-name: com.mysql.cj.jdbc.Driver
   security:
     jwt:
@@ -48,4 +56,8 @@ spring:
     username: 'minioadmin'
     password: 'minioadmin'
   weather:
-    key: qwqqwqwqwqwqwq
+    api-host: 'qwq'
+    key: qwq
+  ai:
+    deepseek:
+      api-key: 'qwq'
