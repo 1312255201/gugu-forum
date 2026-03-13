@@ -4,6 +4,7 @@ import cn.gugufish.entity.dto.*;
 import cn.gugufish.entity.es.TopicDocument;
 import cn.gugufish.entity.vo.request.AddCommentVO;
 import cn.gugufish.entity.vo.request.TopicCreateVO;
+import cn.gugufish.entity.vo.request.TopicTypeCreateVO;
 import cn.gugufish.entity.vo.request.TopicUpdateVO;
 import cn.gugufish.entity.vo.response.*;
 import cn.gugufish.mapper.*;
@@ -63,6 +64,28 @@ public class TopicServiceImpl extends ServiceImpl<TopicMapper, Topic> implements
     @Override
     public List<TopicType> listTypes() {
         return mapper.selectList(null);
+    }
+    @Override
+    public void updateTopicType(TopicTypeVO vo) {
+        TopicType topicType = mapper.selectById(vo.getId());
+        BeanUtils.copyProperties(vo, topicType);
+        mapper.updateById(topicType);
+    }
+
+    @Override
+    public void deleteTopicType(int id) {
+        TopicType type = mapper.selectById(id);
+        if(mapper.deleteById(id) > 0) {
+            List<Topic> list = baseMapper.selectList(Wrappers.<Topic>query().eq("type", type.getId()));
+            list.forEach(topic -> deleteTopic(topic.getId()));
+        }
+    }
+
+    @Override
+    public void createTopicType(TopicTypeCreateVO vo) {
+        TopicType type = new TopicType();
+        BeanUtils.copyProperties(vo, type);
+        mapper.insert(type);
     }
     private Set<Integer> types = null;
     @PostConstruct

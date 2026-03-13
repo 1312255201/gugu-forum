@@ -5,6 +5,7 @@ import cn.gugufish.entity.dto.TopicType;
 import cn.gugufish.entity.dto.Interact;
 import cn.gugufish.entity.vo.request.AddCommentVO;
 import cn.gugufish.entity.vo.request.TopicCreateVO;
+import cn.gugufish.entity.vo.request.TopicTypeCreateVO;
 import cn.gugufish.entity.vo.request.TopicUpdateVO;
 import cn.gugufish.entity.vo.response.*;
 import com.alibaba.fastjson2.JSONObject;
@@ -14,6 +15,9 @@ import java.util.List;
 
 public interface TopicService extends IService<Topic> {
     List<TopicType> listTypes();
+    void updateTopicType(TopicTypeVO vo);
+    void deleteTopicType(int id);
+    void createTopicType(TopicTypeCreateVO vo);
     String createTopic(int uid, TopicCreateVO vo);
     JSONObject listAllTopicByPage(int page, int type, String keyword);
     List<TopicPreviewVO> listTopicByPage(int page, int type);

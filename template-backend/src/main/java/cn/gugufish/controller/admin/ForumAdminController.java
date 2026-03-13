@@ -2,7 +2,9 @@ package cn.gugufish.controller.admin;
 
 import cn.gugufish.entity.PageRestBean;
 import cn.gugufish.entity.RestBean;
+import cn.gugufish.entity.vo.request.TopicTypeCreateVO;
 import cn.gugufish.entity.vo.response.TopicPreviewVO;
+import cn.gugufish.entity.vo.response.TopicTypeVO;
 import cn.gugufish.service.TopicService;
 import cn.gugufish.utils.ProhibitedUtils;
 import com.alibaba.fastjson2.JSONArray;
@@ -70,6 +72,23 @@ public class ForumAdminController {
     @PostMapping("/prohibited-save")
     public RestBean<Void> saveProhibitedList(@RequestBody JSONArray array) {
         prohibitedUtils.setProhibitedWords(array.toList(String.class));
+        return RestBean.success();
+    }
+    @PostMapping("/update-type")
+    public RestBean<Void> updateType(@RequestBody TopicTypeVO vo) {
+        service.updateTopicType(vo);
+        return RestBean.success();
+    }
+
+    @GetMapping("/delete-type")
+    public RestBean<Void> deleteType(@RequestParam int tid) {
+        service.deleteTopicType(tid);
+        return RestBean.success();
+    }
+
+    @PostMapping("/create-type")
+    public RestBean<Void> createType(@RequestBody TopicTypeCreateVO vo) {
+        service.createTopicType(vo);
         return RestBean.success();
     }
 
